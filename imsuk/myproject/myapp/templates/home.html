@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>IMSUK</title>
+    <style>
+        body { background: #f7efdb; text-align: center; font-family: sans-serif; }
+        .btn { background: #3f8240; color: white; padding: 10px; margin: 10px; border-radius: 5px; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" width="100">
+    <h1>ยินดีต้อนรับสู่ IMSUK</h1>
+    <a href="{% url 'store_list' %}" class="btn">ดูร้านอาหาร</a>
+</body>
+</html>

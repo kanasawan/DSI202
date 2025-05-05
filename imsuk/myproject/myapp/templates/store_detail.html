@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ store.name }}</title>
+    <style>
+        body { background: #bade80; font-family: sans-serif; padding: 20px; }
+        img { width: 100%; max-width: 600px; border-radius: 8px; }
+        .back { display: inline-block; margin: 20px 0; color: #3f8240; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <a class="back" href="{% url 'store_list' %}">← กลับ</a>
+    <img src="{{ store.image.url }}">
+    <h1>{{ store.name }}</h1>
+    <p>{{ store.description }}</p>
+    <p>ราคา: {{ store.price_range }}</p>
+    <p>คะแนน: {{ store.rating }} | ขายแล้ว {{ store.sold_count }}</p>
+    <p>โปรโมชัน: {{ store.promo_tag }}</p>
+</body>
+</html>

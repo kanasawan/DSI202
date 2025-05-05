@@ -1,29 +1,29 @@
-# Dockerfile
 FROM python:3.9-slim
 
-# Install system dependencies
+# Install system dependencies (รวมของ Pillow ด้วย)
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libpng-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Create a directory for our code
+# Create working directory
 WORKDIR /usr/src/app
 
-# Copy requirements first, for caching purposes
+# Copy and install dependencies
 COPY requirements.txt .
-
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of our code into the container
+# Copy the project code
 COPY . .
 
-# Make sure our entrypoint script is executable
+# Make sure entrypoint is executable
 RUN chmod +x entrypoint.sh
 
-# Expose port 8000 for Django
+# Expose port
 EXPOSE 8000
 
-# Default command
+# Run app
 CMD ["/bin/bash", "entrypoint.sh"]
