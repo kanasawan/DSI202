@@ -1,28 +1,36 @@
-{% load static %}
+<!-- store_list.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>ร้านอาหาร</title>
-    <style>
-        body { background: #dfb2a7; font-family: sans-serif; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: white; border-radius: 10px; padding: 15px; text-align: center; }
-        img { width: 100%; border-radius: 8px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ร้านอาหารทั้งหมด - IMSUK</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2 style="text-align:center;">ร้านอาหารทั้งหมด</h2>
-    <div class="grid">
-        {% for store in stores %}
-        <div class="card">
-            <img src="{{ store.image.url }}">
-            <h3>{{ store.name }}</h3>
-            <p>⭐ {{ store.rating }} | ขายแล้ว {{ store.sold_count }}</p>
-            <p>{{ store.promo_tag }}</p>
-            <a href="{% url 'store_detail' store.pk %}">ดูเพิ่มเติม</a>
+<body class="bg-gray-50 text-gray-800">
+  <div class="container mx-auto py-10">
+    <h1 class="text-3xl font-bold mb-6 text-center">🍽️ ร้านอาหารทั้งหมด</h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {% for store in stores %}
+      <a href="{% url 'store_detail' store.id %}" class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 block">
+        {% if store.image %}
+          <img src="{{ store.image.url }}" alt="{{ store.name }}" class="w-full h-40 object-cover">
+        {% else %}
+          <div class="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500 text-sm">ไม่มีรูปภาพ</div>
+        {% endif %}
+        <div class="p-4">
+          <h2 class="text-xl font-semibold mb-1">{{ store.name }}</h2>
+          <p class="text-sm text-gray-600 mb-2">หมวดหมู่: {{ store.category }}</p>
+          <p class="text-sm text-gray-700">{{ store.description|truncatewords:20 }}</p>
         </div>
-        {% endfor %}
+      </a>
+      {% endfor %}
     </div>
+
+    {% if stores|length == 0 %}
+      <p class="text-center text-gray-500 mt-10">ไม่มีร้านอาหารในระบบ</p>
+    {% endif %}
+  </div>
 </body>
 </html>

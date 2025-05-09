@@ -1,21 +1,40 @@
+<!-- store_detail.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ store.name }}</title>
-    <style>
-        body { background: #bade80; font-family: sans-serif; padding: 20px; }
-        img { width: 100%; max-width: 600px; border-radius: 8px; }
-        .back { display: inline-block; margin: 20px 0; color: #3f8240; text-decoration: none; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ store.name }} - รายละเอียดร้าน</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <a class="back" href="{% url 'store_list' %}">← กลับ</a>
-    <img src="{{ store.image.url }}">
-    <h1>{{ store.name }}</h1>
-    <p>{{ store.description }}</p>
-    <p>ราคา: {{ store.price_range }}</p>
-    <p>คะแนน: {{ store.rating }} | ขายแล้ว {{ store.sold_count }}</p>
-    <p>โปรโมชัน: {{ store.promo_tag }}</p>
+<body class="bg-gray-50 text-gray-800">
+  <div class="container mx-auto py-10">
+    <div class="bg-white rounded-2xl shadow-md p-6">
+      <h1 class="text-3xl font-bold mb-4">{{ store.name }}</h1>
+
+      {% if store.image %}
+        <img src="{{ store.image.url }}" alt="{{ store.name }}" class="w-full h-64 object-cover rounded-xl mb-6">
+      {% endif %}
+
+      <p class="text-gray-600 mb-2"><strong>หมวดหมู่:</strong> {{ store.category }}</p>
+      <p class="text-gray-700 mb-4">{{ store.description }}</p>
+
+      <h2 class="text-2xl font-semibold mt-6 mb-4">เมนูของร้านนี้</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {% for item in store.menu_items.all %}
+        <div class="bg-gray-100 rounded-xl p-4">
+          {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-32 object-cover rounded mb-2">
+          {% endif %}
+          <h3 class="text-lg font-medium">{{ item.name }}</h3>
+          <p class="text-sm text-gray-600">{{ item.description|truncatewords:15 }}</p>
+          <p class="mt-1 font-semibold text-green-700">{{ item.sale_price }} ฿</p>
+        </div>
+        {% empty %}
+        <p class="text-gray-500">ร้านนี้ยังไม่มีเมนู</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </body>
 </html>
