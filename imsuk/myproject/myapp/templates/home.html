@@ -1,20 +1,74 @@
-<!-- home.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IMSUK - สั่งอาหารง่าย ๆ</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50 text-gray-800">
-  <div class="container mx-auto py-10">
-    <h1 class="text-4xl font-bold text-center text-green-600 mb-6">IMSUK 🍽️</h1>
-    <p class="text-center text-gray-600 mb-10">สั่งอาหารออนไลน์จากร้านใกล้บ้านคุณ ด้วยความรักและความใส่ใจ</p>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IMSUK - สั่งอาหารออนไลน์</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --color-bg: #f7efdb;
+      --color-accent: #dfb2a7;
+      --color-success: #bade80;
+      --color-warning: #efaca5;
+      --color-primary: #3f8240;
+    }
 
-    <div class="text-center">
-      <a href="/stores/" class="inline-block px-6 py-3 bg-green-500 text-white font-semibold rounded-full hover:bg-green-600 transition">ดูร้านอาหารทั้งหมด</a>
+    .hero-bg {
+      background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url("{% static 'images/food.jpg' %}");
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body class="bg-[var(--color-bg)] text-gray-800">
+
+  <!-- Header with background image -->
+  <div class="hero-bg py-6">
+    <div class="container mx-auto flex flex-col items-center">
+      <img src="{% static 'images/imsuk.png' %}?v={{ timestamp }}" alt="IMSUK Logo" class="h-20 mb-2">
+      <h1 class="text-4xl font-bold text-[var(--color-primary)] tracking-wide">IMSUK 🍽️</h1>
+      <p class="mt-2 text-center">สั่งอาหารจากร้านคุณภาพ ใกล้บ้านคุณ</p>
     </div>
   </div>
+
+  <!-- Feature Section -->
+  <div class="container mx-auto py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+      <div class="bg-white p-6 rounded-2xl shadow">
+        <h3 class="text-xl font-bold text-[var(--color-primary)] mb-2">รวดเร็วทันใจ</h3>
+        <p>บริการส่งอาหารภายในเวลาไม่กี่นาทีจากร้านในเครือ IMSUK</p>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow">
+        <h3 class="text-xl font-bold text-[var(--color-primary)] mb-2">สะดวกใช้งาน</h3>
+        <p>เข้าถึงร้านใกล้บ้านและดูรายละเอียดเมนูได้ง่ายดาย</p>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow">
+        <h3 class="text-xl font-bold text-[var(--color-primary)] mb-2">มีให้เลือกหลากหลาย</h3>
+        <p>มีร้านอาหารหลายประเภทให้เลือก ทั้งอาหารไทย จีน ฝรั่ง</p>
+      </div>
+    </div>
+
+    <div class="text-center mt-10">
+      <a href="/stores/" class="inline-block px-8 py-3 bg-[var(--color-primary)] text-white font-bold rounded-full hover:bg-green-700 transition">ดูร้านอาหารทั้งหมด</a>
+    </div>
+  </div>
+
+  <!-- Recommendation Section -->
+  <div class="bg-[var(--color-success)] py-10">
+    <div class="container mx-auto text-center">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">เมนูแนะนำ</h2>
+      <p class="text-gray-700">จะมีการแสดงเมนูเด่นจากร้านต่าง ๆ ที่ระบบเลือกมาแนะนำ (ภายหลัง)</p>
+    </div>
+  </div>
+
+  <!-- Footer with background -->
+  <div class="hero-bg py-6">
+    <footer class="text-white text-center">
+      <p class="text-[var(--color-primary)] font-medium">&copy; 2025 IMSUK. All rights reserved.</p>
+    </footer>
+  </div>
+
 </body>
 </html>
