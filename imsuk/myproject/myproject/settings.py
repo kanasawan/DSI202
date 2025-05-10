@@ -127,3 +127,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
+LOGIN_URL = '/'
+# Optional: หลังจาก login ให้ redirect มาที่หน้า home
+LOGIN_REDIRECT_URL = '/home/'

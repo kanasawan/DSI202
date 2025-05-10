@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - IMSUK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #f7efdb;
+      --color-accent: #dfb2a7;
+      --color-success: #bade80;
+      --color-warning: #efaca5;
+      --color-primary: #3f8240;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex bg-[var(--color-bg)] font-sans text-gray-800">
+
+  <!-- Left image section -->
+  <div class="hidden md:block w-1/2 h-screen">
+    <img src="{% static 'images/v5.jpg' %}" alt="Food" class="w-full h-full object-cover">
+  </div>
+
+  <!-- Right login form -->
+  <div class="w-full md:w-1/2 flex items-center justify-center p-8">
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-lg p-10 space-y-6">
+
+      <!-- Logo -->
+      <div class="flex justify-center">
+        <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="w-24 h-24">
+      </div>
+
+      <h2 class="text-4xl font-bold text-[var(--color-primary)] text-center">Welcome Back!</h2>
+      <p class="text-center text-gray-700">
+        Don’t have an account?
+        <span class="text-[var(--color-primary)] font-semibold cursor-pointer">Sign Up</span>
+      </p>
+
+      {% if messages %}
+        <div class="text-sm text-red-600 bg-red-100 border border-red-300 rounded p-2">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'login' %}" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <input type="text" name="username" placeholder="Email or Username" required
+                 class="w-full px-4 py-3 border border-[var(--color-accent)] rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] bg-white text-[var(--color-primary)] font-medium">
+        </div>
+        <div class="relative">
+          <input type="password" name="password" id="password" placeholder="Password" required
+                 class="w-full px-4 py-3 border border-[var(--color-accent)] rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] bg-white text-[var(--color-primary)] font-medium pr-12">
+          <button type="button" onclick="togglePassword()" class="absolute right-4 top-3 text-[var(--color-primary)] text-xl">
+            👁️
+          </button>
+        </div>
+        <div class="text-sm text-right text-[var(--color-primary)] hover:underline cursor-pointer">
+          Forgot your password?
+        </div>
+
+        <!-- ✅ Sign In button: always visible -->
+        <button type="submit"
+                class="w-full py-3 bg-[var(--color-primary)] text-white rounded-full font-semibold hover:bg-green-700 transition duration-300 shadow">
+          Sign In
+        </button>
+      </form>
+      <div class="flex items-center justify-center space-x-4 mt-4">
+        <div class="border-t w-1/5 border-gray-300"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS: Toggle password -->
+  <script>
+    function togglePassword() {
+      const pwd = document.getElementById('password');
+      pwd.type = pwd.type === 'password' ? 'text' : 'password';
+    }
+  </script>
+
+</body>
+</html>

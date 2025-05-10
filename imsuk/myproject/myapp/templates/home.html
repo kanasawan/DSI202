@@ -1,74 +1,81 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IMSUK - สั่งอาหารออนไลน์</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <title>IMSUK - หน้าหลักเมนูอาหาร</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     :root {
       --color-bg: #f7efdb;
-      --color-accent: #dfb2a7;
-      --color-success: #bade80;
-      --color-warning: #efaca5;
-      --color-primary: #3f8240;
-    }
-
-    .hero-bg {
-      background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url("{% static 'images/food.jpg' %}");
-      background-size: cover;
-      background-position: center;
+      --color-primary: #7cb342;
+      --color-accent: #ef5350;
     }
   </style>
 </head>
-<body class="bg-[var(--color-bg)] text-gray-800">
+<body class="bg-gradient-to-br from-[var(--color-bg)] to-white text-gray-800 font-sans">
 
-  <!-- Header with background image -->
-  <div class="hero-bg py-6">
-    <div class="container mx-auto flex flex-col items-center">
-      <img src="{% static 'images/imsuk.png' %}?v={{ timestamp }}" alt="IMSUK Logo" class="h-20 mb-2">
-      <h1 class="text-4xl font-bold text-[var(--color-primary)] tracking-wide">IMSUK 🍽️</h1>
-      <p class="mt-2 text-center">สั่งอาหารจากร้านคุณภาพ ใกล้บ้านคุณ</p>
-    </div>
-  </div>
-
-  <!-- Feature Section -->
-  <div class="container mx-auto py-10">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-      <div class="bg-white p-6 rounded-2xl shadow">
-        <h3 class="text-xl font-bold text-[var(--color-primary)] mb-2">รวดเร็วทันใจ</h3>
-        <p>บริการส่งอาหารภายในเวลาไม่กี่นาทีจากร้านในเครือ IMSUK</p>
-      </div>
-      <div class="bg-white p-6 rounded-2xl shadow">
-        <h3 class="text-xl font-bold text-[var(--color-primary)] mb-2">สะดวกใช้งาน</h3>
-        <p>เข้าถึงร้านใกล้บ้านและดูรายละเอียดเมนูได้ง่ายดาย</p>
-      </div>
-      <div class="bg-white p-6 rounded-2xl shadow">
-        <h3 class="text-xl font-bold text-[var(--color-primary)] mb-2">มีให้เลือกหลากหลาย</h3>
-        <p>มีร้านอาหารหลายประเภทให้เลือก ทั้งอาหารไทย จีน ฝรั่ง</p>
+  <!-- Top Bar with Logo and Cart -->
+  <header class="bg-white shadow flex justify-between items-center px-6 py-3 sticky top-0 z-50">
+    <div class="flex items-center space-x-3">
+      <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-10 w-10 rounded-full shadow">
+      <div>
+        <h1 class="text-xl font-bold text-[var(--color-primary)]">IMSUK</h1>
+        <p class="text-sm text-gray-500">สั่งอาหารใกล้บ้านคุณ</p>
       </div>
     </div>
+    <a href="/cart/" class="text-[var(--color-primary)] text-3xl hover:scale-110 transition">🛒</a>
+  </header>
 
-    <div class="text-center mt-10">
-      <a href="/stores/" class="inline-block px-8 py-3 bg-[var(--color-primary)] text-white font-bold rounded-full hover:bg-green-700 transition">ดูร้านอาหารทั้งหมด</a>
+  <!-- Location -->
+  <div class="bg-[var(--color-primary)] text-white px-6 py-2">
+    <p class="font-semibold">📍 บ้าน</p>
+    <p class="text-sm">2 ถ. พระจันทร์ แขวงพระบรมมหาราชวัง</p>
+  </div>
+
+  <!-- Search -->
+  <div class="px-6 py-4 bg-[var(--color-primary)]">
+    <input type="text" placeholder="ค้นหาเมนูอาหารของคุณเลย"
+           class="w-full px-5 py-3 rounded-full shadow focus:ring-2 focus:ring-white text-gray-800 placeholder-gray-500">
+  </div>
+
+  <!-- Main Menu Section -->
+  <main class="bg-white p-6">
+    <h2 class="text-2xl font-bold mb-6 text-[var(--color-primary)]">เมนูแนะนำวันนี้ 🍽️</h2>
+    <div class="space-y-8">
+
+      <!-- Product Card -->
+      <div class="flex flex-col md:flex-row items-start bg-gradient-to-r from-[#ffe0e0] to-[#fff7e6] p-4 rounded-2xl shadow-md hover:shadow-xl transition duration-300">
+        <img src="{% static 'images/sample1.jpg' %}" alt="Product"
+             class="w-full md:w-32 h-32 rounded-lg object-cover mb-3 md:mb-0 md:mr-4">
+        <div class="flex-1">
+          <h3 class="font-bold text-xl text-[var(--color-primary)]">Sundae Bakery</h3>
+          <p class="text-[var(--color-accent)] font-semibold">-40% กล่องเซอร์ไพรส์เบเกอรี่</p>
+          <p class="text-sm text-gray-700 mt-1">🕒 วันนี้ 19:00 - 20:00</p>
+          <p class="text-sm text-gray-700">⭐ 5.0 (17 รีวิว) - 12.5 กม.</p>
+          <div class="flex items-center mt-3 space-x-3">
+            <input type="number" value="1" class="w-14 px-2 py-1 border rounded-lg text-center">
+            <button class="bg-[var(--color-primary)] text-white px-4 py-2 rounded-full hover:bg-green-700 transition font-semibold">
+              เพิ่มในตะกร้า
+            </button>
+          </div>
+        </div>
+        <div class="text-right ml-auto pt-2">
+          <p class="line-through text-sm text-gray-400">฿300</p>
+          <p class="font-bold text-lg text-[var(--color-accent)]">฿180</p>
+        </div>
+      </div>
+
+      <!-- เพิ่มสินค้าอื่น ๆ ที่นี่ตามต้องการ -->
+
     </div>
-  </div>
+  </main>
 
-  <!-- Recommendation Section -->
-  <div class="bg-[var(--color-success)] py-10">
-    <div class="container mx-auto text-center">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-4">เมนูแนะนำ</h2>
-      <p class="text-gray-700">จะมีการแสดงเมนูเด่นจากร้านต่าง ๆ ที่ระบบเลือกมาแนะนำ (ภายหลัง)</p>
-    </div>
-  </div>
-
-  <!-- Footer with background -->
-  <div class="hero-bg py-6">
-    <footer class="text-white text-center">
-      <p class="text-[var(--color-primary)] font-medium">&copy; 2025 IMSUK. All rights reserved.</p>
-    </footer>
-  </div>
+  <!-- Footer -->
+  <footer class="text-center text-sm text-gray-500 py-6 bg-[var(--color-bg)]">
+    &copy; 2025 IMSUK | อร่อยทุกมื้อ สุขทุกวัน
+  </footer>
 
 </body>
 </html>
