@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}ชำระเงิน - IMSUK{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">ยืนยันคำสั่งซื้อ</h1>
+<p class="mb-2">รวมทั้งสิ้น: ฿{{ total }}</p>
+<form method="post">
+  {% csrf_token %}
+  <label>ที่อยู่จัดส่ง:</label>
+  <textarea name="address" rows="3" class="w-full border rounded mb-4" required></textarea>
+
+  <label>เบอร์ติดต่อ:</label>
+  <input type="text" name="phone" class="w-full border rounded mb-4" required>
+
+  <label>ช่องทางชำระเงิน:</label>
+  <select name="method" class="w-full border rounded mb-4">
+    <option value="cod">ชำระเงินปลายทาง</option>
+    <option value="credit">บัตรเครดิต/เดบิต</option>
+  </select>
+
+  <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">ยืนยันสั่งซื้อ</button>
+</form>
+{% endblock %}

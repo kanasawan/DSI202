@@ -1,51 +1,57 @@
-from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Restaurant, MenuItem, Cart, CartItem, Order, DeliveryAddress, Payment
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.utils.timezone import now
-from .models import Store, MenuItem
 
-# หน้า Login
-def login_view(request):
+def home(request):
+    restaurants = Restaurant.objects.all()
+    return render(request, 'home.html', {'restaurants': restaurants})
+
+def restaurant_detail(request, id):
+    restaurant = get_object_or_404(Restaurant, id=id)
+    menu_items = restaurant.menu_items.all()
+    return render(request, 'restaurant_detail.html', {'restaurant': restaurant, 'menu_items': menu_items})
+
+def add_to_cart(request, item_id):
+    menu_item = get_object_or_404(MenuItem, id=item_id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=menu_item)
+    if not created:
+        cart_item.quantity += 1
+    cart_item.save()
+    return redirect('cart')
+
+def cart(request):
+    cart = Cart.objects.filter(user=request.user).first()
+    if not cart:
+        return render(request, 'cart.html', {'cart_items': [], 'total': 0})
+    cart_items = cart.items.all()
+    total = sum(item.subtotal() for item in cart_items)
+    return render(request, 'cart.html', {'cart_items': cart_items, 'total': total})
+
+def checkout(request):
+    cart = Cart.objects.filter(user=request.user).first()
+    if not cart or not cart.items.exists():
+        return redirect('cart')
+
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            messages.error(request, 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง')
-    return render(request, 'login.html', {'timestamp': now().timestamp()})
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+        method = request.POST.get('method')
 
-# ✅ หน้า Home: ดึงร้าน + เมนูอาหารของร้าน
-@login_required
-def home_view(request):
-    stores = Store.objects.all().prefetch_related('menu_items')
-    return render(request, 'home.html', {
-        'timestamp': now().timestamp(),
-        'stores': stores
-    })
+        delivery = DeliveryAddress.objects.create(user=request.user, address=address, phone=phone)
+        total = sum(item.subtotal() for item in cart.items.all())
+        order = Order.objects.create(user=request.user, cart=cart, total_price=total, delivery_address=delivery)
 
-# รายชื่อร้าน
-class StoreListView(ListView):
-    model = Store
-    template_name = 'store_list.html'
-    context_object_name = 'stores'
+        Payment.objects.create(order=order, method=method, status='paid', paid_at=now())
 
-# รายละเอียดร้าน
-class StoreDetailView(DetailView):
-    model = Store
-    template_name = 'store_detail.html'
-    context_object_name = 'store'
+        # ล้างตะกร้า
+        cart.items.all().delete()
 
-# รายละเอียดเมนู
-class MenuItemDetailView(DetailView):
-    model = MenuItem
-    template_name = 'menu_item_detail.html'
-    context_object_name = 'menu_item'
+        return redirect('order_success')
 
-# หน้า About
-def about_view(request):
-    return render(request, 'about.html', {'timestamp': now().timestamp()})
+    total = sum(item.subtotal() for item in cart.items.all())
+    return render(request, 'checkout.html', {'total': total})
+
+def order_success(request):
+    return render(request, 'order_success.html')

@@ -1,59 +1,121 @@
 from django.db import models
 from django.contrib.auth.models import User
-class Store(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    category = models.CharField(max_length=100)  # เช่น ของหวาน, ของคาว
-    image = models.ImageField(upload_to='stores/', blank=True)
-    def __str__(self):
-        return self.name
-class MenuItem(models.Model):
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='menu_items')
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    original_price = models.DecimalField(max_digits=6, decimal_places=2)
-    sale_price = models.DecimalField(max_digits=6, decimal_places=2)
-    available_time_start = models.TimeField()
-    available_time_end = models.TimeField()
-    image = models.ImageField(upload_to='menu_items/', blank=True)
-    def __str__(self):
-        return f"{self.name} ({self.store.name})"
-class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
-    name = models.CharField(max_length=255)
-    address = models.TextField()
-    subdistrict = models.CharField(max_length=100)
-    district = models.CharField(max_length=100)
-    province = models.CharField(max_length=100)
-    postcode = models.CharField(max_length=10)
-    is_default = models.BooleanField(default=False)
-    def __str__(self):
-        return self.name
-class PaymentMethod(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payment_methods')
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+# หมวดหมู่ร้านอาหาร เช่น อาหารไทย อาหารเกาหลี
+class Category(models.Model):
     name = models.CharField(max_length=100)
-    detail = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+
     def __str__(self):
-        return f"{self.name} ({self.user.username})"
-class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.SET_NULL, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_paid = models.BooleanField(default=False)
-    total_price = models.DecimalField(max_digits=8, decimal_places=2)
+        return self.name
+
+# ร้านอาหาร
+class Restaurant(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    image = models.ImageField(upload_to='restaurants/')
+    address = models.TextField()
+    open_time = models.TimeField()
+    close_time = models.TimeField()
+    phone = models.CharField(max_length=20)
+
     def __str__(self):
-        return f"Order #{self.pk}"
-class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
+        return self.name
+
+# เมนูอาหาร
+class MenuItem(models.Model):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='menu_items')
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    original_price = models.DecimalField(max_digits=8, decimal_places=2)
+    sale_price = models.DecimalField(max_digits=8, decimal_places=2)
+    image = models.ImageField(upload_to='menu_items/', blank=True)
+
     def __str__(self):
-        return f"{self.menu_item.name} x {self.quantity}"
-class FavoriteStore(models.Model):
+        return f"{self.name} - {self.restaurant.name}"
+
+# โปรโมชัน
+class Promotion(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    discount_percent = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    applicable_items = models.ManyToManyField(MenuItem, blank=True)
+
+    def __str__(self):
+        return self.title
+
+# ตะกร้าสินค้า
+class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
-    class Meta:
-        unique_together = ('user', 'store')
-    def __str__(self):
-        return f"{self.user.username} ❤️ {self.store.name}"
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def subtotal(self):
+        return self.menu_item.sale_price * self.quantity
+
+# ที่อยู่สำหรับจัดส่ง
+class DeliveryAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    address = models.TextField()
+    phone = models.CharField(max_length=15)
+
+# การสั่งซื้อ
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'รอดำเนินการ'),
+        ('preparing', 'กำลังจัดเตรียม'),
+        ('delivering', 'กำลังจัดส่ง'),
+        ('completed', 'เสร็จสิ้น'),
+        ('cancelled', 'ยกเลิก'),
+    ]
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.SET_NULL, null=True)
+    delivery_address = models.ForeignKey(DeliveryAddress, on_delete=models.SET_NULL, null=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+# การชำระเงิน
+class Payment(models.Model):
+    METHOD_CHOICES = [
+        ('cod', 'ชำระเงินปลายทาง'),
+        ('credit', 'บัตรเครดิต/เดบิต'),
+    ]
+    STATUS_CHOICES = [
+        ('pending', 'รอดำเนินการ'),
+        ('paid', 'ชำระแล้ว'),
+        ('failed', 'ล้มเหลว'),
+    ]
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    method = models.CharField(max_length=20, choices=METHOD_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    paid_at = models.DateTimeField(null=True, blank=True)
+
+# รีวิวร้านอาหาร
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+# ร้านโปรดของผู้ใช้
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+# การแจ้งเตือน
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+    is_read = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
