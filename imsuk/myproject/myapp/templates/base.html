@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}IMSUK{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+  <!-- Navigation -->
+  <header class="bg-white px-6 py-4 shadow-md flex justify-between items-center">
+    <h1 class="text-xl font-bold text-green-700">IMSUK</h1>
+    <nav class="space-x-4 text-gray-700">
+      <a href="/home/" class="hover:text-green-600">Home</a>
+      <a href="/about/" class="hover:text-green-600">About</a>
+    </nav>
+  </header>
+
+  <!-- Spacer -->
+  <div class="h-[60px]"></div>
+
+  <!-- Page Content -->
+  {% block content %}
+  {% endblock %}
+
+  <!-- Footer -->
+  <footer class="text-center bg-green-100 text-green-800 py-4 mt-12">
+    &copy; 2025 IMSUK. All rights reserved.
+  </footer>
+
+</body>
+</html>

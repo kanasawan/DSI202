@@ -1,11 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <title>Login - IMSUK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --color-bg: #f7efdb;
@@ -14,11 +15,14 @@
       --color-warning: #efaca5;
       --color-primary: #3f8240;
     }
+    body {
+      font-family: 'Mitr', sans-serif;
+    }
   </style>
 </head>
-<body class="min-h-screen flex bg-[var(--color-bg)] font-sans text-gray-800">
+<body class="min-h-screen flex bg-[var(--color-bg)] text-gray-800">
 
-  <!-- Left image section -->
+  <!-- Left image -->
   <div class="hidden md:block w-1/2 h-screen">
     <img src="{% static 'images/v5.jpg' %}" alt="Food" class="w-full h-full object-cover">
   </div>
@@ -27,17 +31,18 @@
   <div class="w-full md:w-1/2 flex items-center justify-center p-8">
     <div class="w-full max-w-md bg-white rounded-3xl shadow-lg p-10 space-y-6">
 
-      <!-- Logo -->
-      <div class="flex justify-center">
-        <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="w-24 h-24">
+      <!-- Branding Section -->
+      <div class="text-center space-y-2">
+        <img src="{% static 'images/imsuk.png' %}?v={{ timestamp }}" alt="IMSUK Logo"
+             class="w-24 h-24 mx-auto">
+        <h1 class="text-3xl font-extrabold text-[var(--color-primary)]">IMSUK</h1>
+        <h2 class="italic text-lg text-gray-800">บริการสั่งอาหารใกล้บ้านคุณ</h2>
+        <p class="text-sm text-gray-700 leading-relaxed max-w-xs mx-auto">
+          อิ่มอร่อยกับ <span class="font-bold">IMSUK</span> ทุกมื้ออาหารรังสรรค์ด้วยความใส่ใจ เพื่อสุขภาพและความสุขของคุณ
+        </p>
       </div>
 
-      <h2 class="text-4xl font-bold text-[var(--color-primary)] text-center">Welcome Back!</h2>
-      <p class="text-center text-gray-700">
-        Don’t have an account?
-        <span class="text-[var(--color-primary)] font-semibold cursor-pointer">Sign Up</span>
-      </p>
-
+      <!-- Login form -->
       {% if messages %}
         <div class="text-sm text-red-600 bg-red-100 border border-red-300 rounded p-2">
           {% for message in messages %}
@@ -48,34 +53,34 @@
 
       <form method="post" action="{% url 'login' %}" class="space-y-4">
         {% csrf_token %}
-        <div>
-          <input type="text" name="username" placeholder="Email or Username" required
-                 class="w-full px-4 py-3 border border-[var(--color-accent)] rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] bg-white text-[var(--color-primary)] font-medium">
-        </div>
+        <input type="text" name="username" placeholder="Email or Username" required
+               class="w-full px-4 py-3 border border-[var(--color-accent)] rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] bg-white text-[var(--color-primary)] font-medium">
+
         <div class="relative">
           <input type="password" name="password" id="password" placeholder="Password" required
                  class="w-full px-4 py-3 border border-[var(--color-accent)] rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] bg-white text-[var(--color-primary)] font-medium pr-12">
-          <button type="button" onclick="togglePassword()" class="absolute right-4 top-3 text-[var(--color-primary)] text-xl">
-            👁️
-          </button>
+          <button type="button" onclick="togglePassword()" class="absolute right-4 top-3 text-[var(--color-primary)] text-xl">👁️</button>
         </div>
+
         <div class="text-sm text-right text-[var(--color-primary)] hover:underline cursor-pointer">
           Forgot your password?
         </div>
 
-        <!-- ✅ Sign In button: always visible -->
         <button type="submit"
                 class="w-full py-3 bg-[var(--color-primary)] text-white rounded-full font-semibold hover:bg-green-700 transition duration-300 shadow">
           Sign In
         </button>
       </form>
-      <div class="flex items-center justify-center space-x-4 mt-4">
-        <div class="border-t w-1/5 border-gray-300"></div>
-      </div>
+
+      <p class="text-center text-sm text-gray-700">
+        Don’t have an account?
+        <span class="text-[var(--color-primary)] font-semibold cursor-pointer">Sign Up</span>
+      </p>
+
     </div>
   </div>
 
-  <!-- JS: Toggle password -->
+  <!-- Toggle password JS -->
   <script>
     function togglePassword() {
       const pwd = document.getElementById('password');
