@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Restaurant, MenuItem, Cart, CartItem, Order, DeliveryAddress, Payment
-from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
 
 def home(request):
-    restaurants = Restaurant.objects.all()
-    return render(request, 'home.html', {'restaurants': restaurants})
+    menu_items = MenuItem.objects.all()
+    return render(request, 'home.html', {'menu_items': menu_items})
 
 def restaurant_detail(request, id):
     restaurant = get_object_or_404(Restaurant, id=id)
@@ -14,12 +13,19 @@ def restaurant_detail(request, id):
 
 def add_to_cart(request, item_id):
     menu_item = get_object_or_404(MenuItem, id=item_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
+
+    # ✅ ใช้ first() เพื่อหลีกเลี่ยง MultipleObjectsReturned
+    cart = Cart.objects.filter(user=request.user).first()
+    if not cart:
+        cart = Cart.objects.create(user=request.user)
+
     cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=menu_item)
     if not created:
         cart_item.quantity += 1
     cart_item.save()
+
     return redirect('cart')
+
 
 def cart(request):
     cart = Cart.objects.filter(user=request.user).first()
@@ -44,8 +50,6 @@ def checkout(request):
         order = Order.objects.create(user=request.user, cart=cart, total_price=total, delivery_address=delivery)
 
         Payment.objects.create(order=order, method=method, status='paid', paid_at=now())
-
-        # ล้างตะกร้า
         cart.items.all().delete()
 
         return redirect('order_success')
@@ -55,3 +59,24 @@ def checkout(request):
 
 def order_success(request):
     return render(request, 'order_success.html')
+
+def increase_quantity(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    item.quantity += 1
+    item.save()
+    return redirect('cart')
+
+def decrease_quantity(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    if item.quantity > 1:
+        item.quantity -= 1
+        item.save()
+    else:
+        item.delete()
+    return redirect('cart')
+
+def remove_item(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id)
+    item.delete()
+    return redirect('cart')
+

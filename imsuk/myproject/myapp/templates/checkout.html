@@ -2,22 +2,34 @@
 {% block title %}ชำระเงิน - IMSUK{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">ยืนยันคำสั่งซื้อ</h1>
-<p class="mb-2">รวมทั้งสิ้น: ฿{{ total }}</p>
-<form method="post">
-  {% csrf_token %}
-  <label>ที่อยู่จัดส่ง:</label>
-  <textarea name="address" rows="3" class="w-full border rounded mb-4" required></textarea>
+<div class="container mx-auto px-4 py-8 max-w-lg">
+    <h1 class="text-3xl font-bold mb-8 text-gray-800">ยืนยันคำสั่งซื้อ</h1>
 
-  <label>เบอร์ติดต่อ:</label>
-  <input type="text" name="phone" class="w-full border rounded mb-4" required>
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <p class="mb-6 text-lg font-medium text-gray-700">รวมทั้งสิ้น: <span class="text-green-600 font-bold">฿{{ total }}</span></p>
 
-  <label>ช่องทางชำระเงิน:</label>
-  <select name="method" class="w-full border rounded mb-4">
-    <option value="cod">ชำระเงินปลายทาง</option>
-    <option value="credit">บัตรเครดิต/เดบิต</option>
-  </select>
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">ที่อยู่จัดส่ง:</label>
+                <textarea name="address" rows="4" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors" required></textarea>
+            </div>
 
-  <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">ยืนยันสั่งซื้อ</button>
-</form>
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">เบอร์ติดต่อ:</label>
+                <input type="text" name="phone" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors" required>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium mb-2">ช่องทางชำระเงิน:</label>
+                <select name="method" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors">
+                    <option value="cod">ชำระเงินปลายทาง</option>
+                    <option value="credit">บัตรเครดิต/เดบิต</option>
+                </select>
+            </div>
+
+            <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">ยืนยันสั่งซื้อ</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

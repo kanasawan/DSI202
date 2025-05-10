@@ -1,16 +1,46 @@
 {% extends 'base.html' %}
-{% block title %}หน้าแรก - IMSUK{% endblock %}
+{% block title %}เมนูอาหารทั้งหมด - IMSUK{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-bold mb-4">ร้านอาหารทั้งหมด</h1>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-  {% for restaurant in restaurants %}
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}" class="h-40 w-full object-cover rounded">
-      <h2 class="text-lg font-semibold mt-2">{{ restaurant.name }}</h2>
-      <p>{{ restaurant.category.name }}</p>
-      <a href="{% url 'restaurant_detail' restaurant.id %}" class="text-blue-600 hover:underline">ดูเมนู</a>
+<div class="container mx-auto px-4 py-8 max-w-7xl">
+    <h1 class="text-3xl font-bold mb-8 text-gray-800">เมนูอาหารทั้งหมด</h1>
+
+    <!-- 🔍 ช่องค้นหาเมนู -->
+    <form method="get" class="mb-8 flex gap-3">
+        <input type="text" name="q" value="{{ query }}" placeholder="ค้นหาเมนู..." class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-gray-700">
+        <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">ค้นหา</button>
+    </form>
+
+    <!-- 🍽️ รายการเมนูอาหาร -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for item in menu_items %}
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-transform hover:scale-105 hover:shadow-xl">
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="h-48 w-full object-cover">
+            <div class="p-5 flex flex-col flex-grow">
+                <h2 class="text-xl font-semibold text-gray-800">{{ item.name }}</h2>
+                <p class="text-gray-600 text-sm mt-1">จากร้าน: {{ item.restaurant.name }}</p>
+                <div class="mt-3">
+                    {% if item.original_price > item.sale_price %}
+                    <p class="text-sm line-through text-gray-400">฿{{ item.original_price }}</p>
+                    {% endif %}
+                    <p class="text-red-600 font-bold text-lg">฿{{ item.sale_price }}</p>
+                </div>
+                <div class="mt-5 flex justify-between items-center">
+                    <form method="post" action="{% url 'add_to_cart' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium">
+                            เพิ่มลงตะกร้า
+                        </button>
+                    </form>
+                    <a href="{% url 'cart' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                        สั่งเลย
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-500 col-span-full text-center text-lg">ไม่พบเมนูอาหาร</p>
+        {% endfor %}
     </div>
-  {% endfor %}
 </div>
 {% endblock %}
