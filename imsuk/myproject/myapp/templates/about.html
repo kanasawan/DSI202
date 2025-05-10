@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}About - IMSUK{% endblock %}
+
+{% block content %}
+<section class="bg-white rounded-lg shadow-lg p-8 mb-12">
+  <div class="flex flex-col md:flex-row items-center md:space-x-8">
+    <img src="{% static 'image/imsuk.png' %}" alt="IMSUK Logo" class="h-32 w-32 mb-4 md:mb-0 rounded-full border-4 border-green-200">
+    <div>
+      <h1 class="text-4xl font-extrabold text-gray-800 mb-2">เกี่ยวกับเรา</h1>
+      <p class="text-lg text-gray-600">
+        IMSUK คือบริการสั่งอาหารใกล้บ้านคุณ<br>
+        เราคัดสรรร้านคุณภาพ เพื่อสุขภาพและความสุขของคุณ
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for f in features %}
+    <div class="bg-white rounded-lg shadow p-6 text-center">
+      <h3 class="text-xl font-semibold mb-2">{{ f.title }}</h3>
+      <p class="text-gray-600">{{ f.desc }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

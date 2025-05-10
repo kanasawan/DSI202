@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'myapp',
     'django_extensions',  # ถ้าใช้
 ]
@@ -27,24 +28,24 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # จำเป็นสำหรับ login_required
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
 
-# ✅ Templates (ใช้ myapp/templates)
+# Templates (ใช้ myapp/templates)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'myapp' / 'templates'],  # ✅ ชี้ไปยัง myapp/templates
+        'DIRS': [BASE_DIR / 'myapp' / 'templates'],  # ชี้ไปยัง myapp/templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
+                'django.contrib.auth.context_processors.auth',      # จำเป็นสำหรับ user ใน template
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -63,18 +64,10 @@ DATABASES = {
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 # Internationalization
@@ -83,11 +76,19 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# ✅ Static files (CSS/JS/Images)
+# Static files (CSS/JS/Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # ✅ อย่าลืมสร้างโฟลเดอร์ชื่อ static (ไม่ใช่ Static)
+    BASE_DIR / 'static',  # อย่าลืมสร้างโฟลเดอร์ชื่อ static (ตัวพิมพ์เล็ก)
 ]
+
+# Login settings
+# เมื่อเรียก view ที่มี @login_required แต่ยังไม่ได้ล็อกอิน
+# จะพาไปที่ URL นี้ (ซึ่งเราแมพ LoginView ไว้ที่ root '/')
+LOGIN_URL = '/'
+
+# เมื่อล็อกอินสำเร็จ จะพาไปหน้า Home จริงที่ '/home/'
+LOGIN_REDIRECT_URL = '/home/'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

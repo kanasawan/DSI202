@@ -80,3 +80,13 @@ def remove_item(request, item_id):
     item.delete()
     return redirect('cart')
 
+def about(request):
+    """
+    หน้า About: อธิบายบริการ IMSUK พร้อมไฮไลต์ฟีเจอร์
+    """
+    features = [
+        {'title': 'รวดเร็วทันใจ', 'desc': 'บริการส่งอาหารภายในเวลาไม่กี่นาที'},
+        {'title': 'สะดวกใช้งาน', 'desc': 'เข้าถึงร้านใกล้บ้านและดูเมนูได้ง่าย'},
+        {'title': 'มีให้เลือกหลากหลาย', 'desc': 'ร้านอาหารหลากหลายประเภท ทั้งไทย จีน ฝรั่ง'},
+    ]
+    return render(request, 'about.html', {'features': features})
