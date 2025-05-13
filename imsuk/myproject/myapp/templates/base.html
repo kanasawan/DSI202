@@ -22,36 +22,35 @@
 </head>
 <body class="bg-custom-cream text-gray-800 font-sans relative">
 
-{% if user.is_authenticated %}
-  {% if request.path != '/login/' and request.path != '/signup/' %}
-    <!-- ✅ Navbar ปรับสีและแสดงเมนูตลอดเวลา -->
-    <header class="bg-custom-darkgreen text-white shadow-lg flex justify-between items-center px-6 py-4 sticky top-0 z-50">
-      <div class="flex items-center space-x-4">
-        <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-12 w-12 object-contain">
-        <a href="{% url 'home' %}" class="font-bold text-2xl tracking-wider hover:text-opacity-80 transition">IMSUK</a>
-      </div>
-      <nav class="flex items-center space-x-6 text-base font-medium tracking-wide uppercase">
-        <a href="{% url 'home' %}" class="hover:underline transition">หน้าแรก</a>
-        <a href="{% url 'profile' %}" class="hover:underline transition">โปรไฟล์</a>
-        <a href="{% url 'order_history' %}" class="hover:underline transition">ประวัติ</a>
-        <a href="{% url 'favorite_list' %}" class="hover:underline transition">ร้านโปรด</a>
-        <a href="{% url 'help_center' %}" class="text-sm font-normal tracking-normal hover:underline transition">ช่วยเหลือ</a>
-      </nav>
-    </header>    
+{# ✅ ซ่อน Navbar เฉพาะหน้า login ที่มี url_name == 'login' #}
+{% if user.is_authenticated and request.resolver_match.url_name != 'login' %}
+  <header class="bg-custom-darkgreen text-white shadow-lg flex justify-between items-center px-6 py-4 sticky top-0 z-50">
+    <div class="flex items-center space-x-4">
+      <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-12 w-12 object-contain">
+      <a href="{% url 'home' %}" class="font-bold text-2xl tracking-wider hover:text-opacity-80 transition">IMSUK</a>
+    </div>
+    <nav class="flex items-center space-x-6 text-base font-medium tracking-wide uppercase">
+      <a href="{% url 'home' %}" class="hover:underline transition">หน้าแรก</a>
+      <a href="{% url 'profile' %}" class="hover:underline transition">โปรไฟล์</a>
+      <a href="{% url 'order_history' %}" class="hover:underline transition">ประวัติ</a>
+      <a href="{% url 'favorite_list' %}" class="hover:underline transition">ร้านโปรด</a>
+      <a href="{% url 'help_center' %}" class="text-sm font-normal tracking-normal hover:underline transition">ช่วยเหลือ</a>
+    </nav>
+  </header>
 
-    {% if request.path == '/home/' %}
-  <a href="{% url 'cart_view' %}" class="fixed bottom-8 right-8 bg-custom-green text-custom-darkgreen p-4 rounded-full shadow-xl z-50 flex items-center justify-center w-16 h-16 text-2xl hover:bg-green-200 transition">
-    🛒
-    {% if cart_count and cart_count > 0 %}
-      <span class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-sm rounded-full px-2">
-        {{ cart_count }}
-      </span>
-    {% endif %}
-  </a>
-  {% endif %}
+  {% if request.path == '/home/' %}
+    <a href="{% url 'cart_view' %}" class="fixed bottom-8 right-8 bg-custom-green text-custom-darkgreen p-4 rounded-full shadow-xl z-50 flex items-center justify-center w-16 h-16 text-2xl hover:bg-green-200 transition">
+      🛒
+      {% if cart_count and cart_count > 0 %}
+        <span class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-sm rounded-full px-2">
+          {{ cart_count }}
+        </span>
+      {% endif %}
+    </a>
   {% endif %}
 {% endif %}
 
+<!-- ✅ เนื้อหาหลัก -->
 <div class="container mx-auto p-6">
   {% block content %}{% endblock %}
 </div>
