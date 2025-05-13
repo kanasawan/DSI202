@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}ศูนย์ช่วยเหลือ{% endblock %}
+{% block content %}
+<div class="bg-custom-green p-6 text-center rounded-t-xl shadow-md">
+  <h1 class="text-2xl font-bold text-white">ศูนย์ช่วยเหลือ</h1>
+  <p class="text-sm text-white">หากคุณมีคำถามหรือพบปัญหาในการใช้งาน IMSUK กรุณาดูข้อมูลด้านล่าง หรือ ติดต่อเราได้ที่:</p>
+</div>
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-b-xl shadow-2xl mt-4">
+  <ul class="space-y-4 text-lg text-gray-700">
+    <li>📧 อีเมล: <a href="mailto:support@imsuk.example" class="text-custom-darkgreen font-semibold hover:underline">support@imsuk.example</a></li>
+    <li>📞 โทรศัพท์: <span class="font-semibold text-custom-darkgreen">+66 1234 567 89</span></li>
+    <li>💬 Line Official: <span class="font-semibold text-custom-darkgreen">@imsuk_support</span></li>
+  </ul>
+  <div class="mt-8">
+    <h2 class="text-xl font-bold text-custom-darkgreen mb-4">คำถามที่พบบ่อย (FAQ)</h2>
+    <details class="mb-4">
+      <summary class="cursor-pointer text-custom-darkgreen hover:text-opacity-80 transition">ฉันจะเปลี่ยนที่อยู่จัดส่งได้อย่างไร?</summary>
+      <p class="mt-2 text-gray-600">คุณสามารถเปลี่ยนที่อยู่ได้จากหน้าการตั้งค่าในโปรไฟล์ของคุณ</p>
+    </details>
+    <details class="mb-4">
+      <summary class="cursor-pointer text-custom-darkgreen hover:text-opacity-80 transition">ฉันจะดูประวัติการสั่งซื้อได้ที่ไหน?</summary>
+      <p class="mt-2 text-gray-600">สามารถดูได้ในเมนู "ประวัติการสั่งซื้อ"</p>
+    </details>
+    <details>
+      <summary class="cursor-pointer text-custom-darkgreen hover:text-opacity-80 transition">ฉันจะติดต่อร้านอาหารได้อย่างไร?</summary>
+      <p class="mt-2 text-gray-600">กรุณาติดต่อผ่านระบบข้อความในแอป หรือสอบถามผ่านศูนย์ช่วยเหลือของเรา</p>
+    </details>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}IMSUK{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .bg-custom-cream { background-color: #f7efdb; }
+    .bg-custom-pink { background-color: #efaca5; }
+    .bg-custom-lightpink { background-color: #f4d9d0; }
+    .bg-custom-green { background-color: #bade80; }
+    .text-custom-darkgreen { color: #3f8240; }
+    .text-custom-brown { color: #a6746a; }
+    .hover\:text-custom-darkgreen:hover { color: #3f8240; }
+    .border-custom-green { border-color: #bade80; }
+    .bg-custom-darkgreen { background-color: #3f8240; }
+    .hover\:bg-custom-darkgreen-hover:hover { background-color: #2d5e2f; }
+    .bg-custom-gray { background-color: #f5f5f5; }
+  </style>
+  <script>
+    function toggleMenu() {
+      document.getElementById('dropdownMenu').classList.toggle('hidden');
+      document.getElementById('overlay').classList.toggle('hidden');
+    }
+    function closeMenu() {
+      document.getElementById('dropdownMenu').classList.add('hidden');
+      document.getElementById('overlay').classList.add('hidden');
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('overlay');
+      if (overlay) {
+        overlay.addEventListener('click', closeMenu);
+      }
+    });
+  </script>
+</head>
+<body class="bg-custom-cream text-gray-800 font-sans relative">
+  {% if user.is_authenticated %}
+    {% if request.path != '/login/' and request.path != '/signup/' %}
+      <header class="bg-custom-green shadow-lg flex justify-between items-center px-6 py-4 sticky top-0 z-50">
+        <div class="flex items-center space-x-4">
+          <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-12 w-12 object-contain">
+          <a href="{% url 'home' %}" class="text-custom-darkgreen font-bold text-2xl hover:text-opacity-80 transition">IMSUK</a>
+        </div>
+        <div class="flex items-center space-x-6">
+          <a href="{% url 'home' %}" class="text-lg text-gray-700 hover:text-custom-darkgreen transition">หน้าแรก</a>
+          <button onclick="toggleMenu()" class="focus:outline-none">
+            <svg class="w-8 h-8 text-custom-darkgreen hover:text-opacity-80 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+        <div id="dropdownMenu" class="absolute right-6 top-16 w-56 bg-custom-pink shadow-xl rounded-lg p-4 hidden z-50">
+          <a href="{% url 'profile' %}" class="block py-2 text-base text-gray-800 hover:bg-custom-lightpink rounded transition">โปรไฟล์</a>
+          <a href="{% url 'order_history' %}" class="block py-2 text-base text-gray-800 hover:bg-custom-lightpink rounded transition">ประวัติการสั่งซื้อ</a>
+          <a href="{% url 'favorite_list' %}" class="block py-2 text-base text-gray-800 hover:bg-custom-lightpink rounded transition">ร้านโปรด</a>
+          <div class="border-t mt-2 pt-2">
+            <a href="{% url 'help_center' %}" class="block text-sm text-gray-600 hover:text-custom-darkgreen transition">ศูนย์ช่วยเหลือ</a>
+          </div>
+        </div>
+        <div id="overlay" class="fixed inset-0 bg-black opacity-30 hidden z-40"></div>
+      </header>
+      {% if request.path == '/home/' %}
+        <a href="{% url 'cart_view' %}" class="fixed bottom-8 right-8 bg-custom-darkgreen text-white p-4 rounded-full shadow-2xl z-50 flex items-center justify-center w-16 h-16 text-2xl hover:bg-custom-darkgreen-hover transition">
+          🛒
+          {% if cart_count and cart_count > 0 %}
+            <span class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-custom-lightpink text-white text-sm rounded-full px-2">
+              {{ cart_count }}
+            </span>
+          {% endif %}
+        </a>
+      {% endif %}
+    {% endif %}
+  {% endif %}
+  <div class="container mx-auto p-6">
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
+</html>

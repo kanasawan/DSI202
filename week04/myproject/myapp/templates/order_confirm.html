@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}ยืนยันคำสั่งซื้อ - IMSUK{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-2xl mt-6">
+  <h1 class="text-3xl font-bold text-custom-darkgreen mb-4">ยืนยันคำสั่งซื้อ</h1>
+  <p class="text-lg mb-6">กรุณาตรวจสอบรายละเอียดก่อนยืนยัน</p>
+  <table class="w-full bg-custom-gray rounded-lg shadow-inner mb-6">
+    <thead>
+      <tr class="bg-custom-green text-white text-left">
+        <th class="p-4">เมนู</th>
+        <th class="p-4">จำนวน</th>
+        <th class="p-4">รวม</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart.items.all %}
+      <tr class="border-t hover:bg-custom-lightpink transition">
+        <td class="p-4 text-lg">{{ item.menu_item.name }}</td>
+        <td class="p-4 text-lg">{{ item.quantity }}</td>
+        <td class="p-4 text-lg">฿{{ item.subtotal }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="text-right text-2xl font-bold text-custom-darkgreen mb-6">ยอดรวมทั้งหมด: ฿{{ total }}</p>
+  <div class="flex justify-end">
+    <a href="{% url 'payment_select' %}" class="bg-custom-darkgreen text-white px-6 py-3 rounded-lg hover:bg-custom-darkgreen-hover transition duration-300 font-semibold text-lg">ไปชำระเงิน</a>
+  </div>
+</div>
+{% endblock %}

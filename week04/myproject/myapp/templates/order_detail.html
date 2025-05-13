@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}รายละเอียดคำสั่งซื้อ{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto p-6">
+  <h1 class="text-3xl font-bold text-custom-darkgreen mb-6">รายละเอียดคำสั่งซื้อ</h1>
+  <div class="bg-custom-green border border-custom-darkgreen text-white px-6 py-4 rounded-lg mb-8 shadow-lg">
+    <strong class="font-bold text-xl">✅ คำสั่งซื้อสำเร็จ!</strong>
+    <span class="block sm:inline text-base">ขอบคุณที่ใช้บริการกับเรา</span>
+  </div>
+  <div class="bg-white p-6 rounded-xl shadow-2xl">
+    <div class="space-y-4 text-lg">
+      <p><strong class="text-custom-darkgreen">หมายเลขคำสั่งซื้อ:</strong> {{ order.id }}</p>
+      <p><strong class="text-custom-darkgreen">สถานะ:</strong> {{ order.get_status_display }}</p>
+      <p><strong class="text-custom-darkgreen">รวมทั้งหมด:</strong> ฿{{ order.total_price }}</p>
+      <p><strong class="text-custom-darkgreen">เวลาที่สั่ง:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
+    </div>
+    <h2 class="mt-8 font-semibold text-xl text-custom-darkgreen">ที่อยู่จัดส่ง</h2>
+    <p class="text-lg mt-2">{{ order.delivery_address.address }}</p>
+    <p class="text-lg">เบอร์โทร: {{ order.delivery_address.phone }}</p>
+  </div>
+  <a href="{% url 'order_history' %}" class="mt-6 inline-block text-custom-pink hover:underline text-lg transition">↩ กลับไปยังประวัติการสั่งซื้อ</a>
+</div>
+{% endblock %}

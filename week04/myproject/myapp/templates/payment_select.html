@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}เลือกวิธีชำระเงิน - IMSUK{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto p-6">
+  <h1 class="text-3xl font-bold text-custom-darkgreen mb-6">เลือกวิธีชำระเงิน</h1>
+  <form method="post" class="bg-white p-8 rounded-xl shadow-2xl">
+    {% csrf_token %}
+    <p class="mb-6 text-lg text-gray-700">กรุณาเลือกวิธีการชำระเงิน:</p>
+    <div class="mb-4">
+      <label class="inline-flex items-center cursor-pointer">
+        <input type="radio" name="method" value="cod" class="form-radio h-5 w-5 text-custom-darkgreen mr-3" required>
+        <span class="text-lg text-gray-700">ชำระเงินปลายทาง (COD)</span>
+      </label>
+    </div>
+    <div class="mb-8">
+      <label class="inline-flex items-center cursor-pointer">
+        <input type="radio" name="method" value="credit" class="form-radio h-5 w-5 text-custom-darkgreen mr-3" required>
+        <span class="text-lg text-gray-700">บัตรเครดิต/เดบิต</span>
+      </label>
+    </div>
+    <button type="submit" class="w-full bg-custom-darkgreen text-white px-6 py-3 rounded-lg hover:bg-custom-darkgreen-hover transition duration-300 font-semibold text-lg">ยืนยันการสั่งซื้อ</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}{{ restaurant.name }} - เมนู{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto p-6">
+  <div class="bg-custom-lightpink rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300 mb-6">
+    {% if restaurant.image %}
+      <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}" class="w-full h-64 object-cover">
+    {% else %}
+      <div class="w-full h-64 bg-gray-200 flex items-center justify-center text-gray-500">
+        ไม่มีรูปภาพ
+      </div>
+    {% endif %}
+    <div class="p-6">
+      <h1 class="text-2xl font-bold text-custom-darkgreen mb-2">{{ restaurant.name }}</h1>
+      <p class="text-base text-custom-brown italic mb-4">อร่อยส่งตรงถึงหน้าประตูคุณ!</p>
+      <p class="text-base text-gray-600 mb-2">{{ restaurant.address }}</p>
+      <p class="text-base text-gray-600 flex items-center"><span class="text-xl mr-1">⏰</span> {{ restaurant.open_time|time:'H:i' }} - {{ restaurant.close_time|time:'H:i' }}</p>
+    </div>
+  </div>
+  <h2 class="text-2xl font-semibold text-custom-darkgreen mb-4">เมนูอาหาร</h2>
+  {% if menu_items %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for item in menu_items %}
+        <div class="bg-custom-lightpink rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+          {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-cover">
+          {% else %}
+            <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400">
+              ไม่มีรูปภาพ
+            </div>
+          {% endif %}
+          <div class="p-4">
+            <h3 class="text-xl font-bold text-custom-darkgreen mb-1">{{ item.name }}</h3>
+            {% if item.promotion_set.all %}
+              <div class="flex items-center mb-2">
+                <span class="bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded mr-2">-{{ item.promotion_set.first.discount_percent }}%</span>
+                <span class="text-custom-darkgreen font-semibold text-lg">{{ item.sale_price }} ฿</span>
+                <span class="text-gray-500 line-through ml-2">{{ item.promotion_set.first.original_price }} ฿</span>
+              </div>
+            {% else %}
+              <p class="text-custom-darkgreen font-semibold text-lg mb-2">฿{{ item.sale_price }}</p>
+            {% endif %}
+            <a href="{% url 'add_to_cart' item.id %}" class="inline-block mt-2 bg-custom-darkgreen text-white px-4 py-2 rounded-lg hover:bg-custom-darkgreen-hover transition duration-300">เพิ่มในตะกร้า</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-xl text-gray-500 text-center py-6">ยังไม่มีเมนูอาหารสำหรับร้านนี้</p>
+  {% endif %}
+  {% if user.is_authenticated %}
+    <form action="{% url 'add_favorite' restaurant.id %}" method="post" class="mt-6">
+      {% csrf_token %}
+      <button type="submit" class="text-custom-pink underline text-lg hover:text-opacity-80 transition">+ เพิ่มร้านในรายการโปรด</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

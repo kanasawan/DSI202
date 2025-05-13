@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}แก้ไขที่อยู่{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-custom-lightpink p-8 rounded-xl shadow-2xl mt-10">
+  <h2 class="text-3xl font-bold text-custom-darkgreen text-center mb-8">
+    {% if editing %} แก้ไขที่อยู่ {% else %} เพิ่มที่อยู่ {% endif %}
+  </h2>
+  <form method="post" class="space-y-6">
+    {% csrf_token %}
+    {{ form.as_p|safe }}
+    <button type="submit" class="w-full bg-custom-darkgreen text-white py-3 rounded-lg hover:bg-custom-darkgreen-hover transition duration-300 font-semibold text-lg">บันทึก</button>
+  </form>
+</div>
+{% endblock %}

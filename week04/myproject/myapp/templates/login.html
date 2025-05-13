@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}เข้าสู่ระบบ - IMSUK{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-screen">
+  <div class="bg-custom-lightpink p-8 rounded-xl shadow-2xl max-w-md w-full transform hover:scale-105 transition duration-300">
+    <div class="text-center mb-8">
+      <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-20 w-20 mx-auto mb-6">
+      <p class="text-custom-brown italic text-xl">อร่อยส่งตรงถึงหน้าประตูคุณ</p>
+    </div>
+    <h2 class="text-3xl font-bold text-custom-darkgreen text-center mb-8">เข้าสู่ระบบ</h2>
+    <form method="post" action="{% url 'login' %}?next=/check-address/" class="space-y-6">
+      {% csrf_token %}
+      {% if form.errors %}
+        <p class="text-red-600 text-sm text-center bg-red-100 p-2 rounded">กรุณาใส่ ชื่อผู้ใช้ และรหัสผ่านที่ถูกต้อง</p>
+      {% endif %}
+      <div>
+        <label for="username" class="block text-base text-custom-darkgreen mb-2 font-medium">ชื่อผู้ใช้</label>
+        <input type="text" name="username" id="username" class="w-full p-4 border border-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
+      </div>
+      <div>
+        <label for="password" class="block text-base text-custom-darkgreen mb-2 font-medium">รหัสผ่าน</label>
+        <input type="password" name="password" id="password" class="w-full p-4 border border-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
+      </div>
+      <button type="submit" class="w-full bg-custom-darkgreen text-white py-4 rounded-lg hover:bg-custom-darkgreen-hover transition duration-300 font-semibold text-lg">เข้าสู่ระบบ</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}{{ item.name }} - รายละเอียดเมนู{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto p-6">
+  <div class="bg-custom-lightpink rounded-lg shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+    {% if item.image %}
+      <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-64 object-cover">
+    {% endif %}
+    <div class="p-6">
+      <h1 class="text-2xl font-bold text-custom-darkgreen mb-2">{{ item.restaurant.name }}</h1>
+      <p class="text-base text-custom-brown italic mb-4">อร่อยส่งตรงถึงหน้าประตูคุณ!</p>
+      <h2 class="text-xl font-semibold text-custom-darkgreen mb-2">{{ item.name }}</h2>
+      <p class="text-gray-700 text-base mb-4">{{ item.description }}</p>
+      {% if item.promotion_set.all %}
+        <div class="flex items-center mb-4">
+          <span class="bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded mr-2">-{{ item.promotion_set.first.discount_percent }}%</span>
+          <span class="text-custom-darkgreen font-semibold text-lg">{{ item.sale_price }} ฿</span>
+          <span class="text-gray-500 line-through ml-2">{{ item.promotion_set.first.original_price }} ฿</span>
+        </div>
+      {% else %}
+        <p class="text-custom-darkgreen font-semibold text-lg mb-4">ราคา: ฿{{ item.sale_price }}</p>
+      {% endif %}
+      <p class="text-base text-gray-600 flex items-center mb-4"><span class="text-xl mr-1">⏰</span> {{ restaurant.open_time|time:'H:i' }} - {{ restaurant.close_time|time:'H:i' }}</p>
+      <form action="{% url 'add_to_cart' item.id %}" method="post" class="inline-block mr-4">
+        {% csrf_token %}
+        <button type="submit" class="bg-custom-darkgreen text-white px-4 py-2 rounded-lg hover:bg-custom-darkgreen-hover transition duration-300 font-semibold">เพิ่มในตะกร้า</button>
+      </form>
+      {% if user.is_authenticated %}
+        <form action="{% url 'add_favorite' item.restaurant.id %}" method="post" class="inline-block">
+          {% csrf_token %}
+          <button type="submit" class="bg-custom-pink text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition duration-300 font-semibold">+ ร้านโปรด</button>
+        </form>
+      {% endif %}
+      <hr class="my-6 border-custom-green">
+      <h2 class="text-xl font-bold text-custom-darkgreen mb-2">เกี่ยวกับร้าน</h2>
+      <div class="space-y-2 text-base">
+        <p><strong>ชื่อร้าน:</strong> {{ restaurant.name }}</p>
+        <p><strong>หมวดหมู่:</strong> {{ restaurant.category.name }}</p>
+        <p><strong>ที่อยู่:</strong> {{ restaurant.address }}</p>
+        <p><strong>โทร:</strong> {{ restaurant.phone }}</p>
+        <p><strong>เวลาเปิด:</strong> {{ restaurant.open_time|time:'H:i' }} - {{ restaurant.close_time|time:'H:i' }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
