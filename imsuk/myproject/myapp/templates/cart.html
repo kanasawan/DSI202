@@ -34,10 +34,14 @@
     </table>
     <div class="mt-10 text-right text-2xl font-bold text-custom-darkgreen">
       รวมทั้งหมด: ฿{{ cart_total }}
-    </div>
-    <div class="text-right mt-6">
-      <a href="{% url 'order_confirm' %}" class="inline-block bg-gradient-to-r from-custom-darkgreen to-green-600 text-white px-6 py-3 rounded-xl hover:from-green-700 hover:to-custom-darkgreen-hover shadow-lg transition duration-300 font-semibold text-lg">ดำเนินการต่อ</a>
-    </div>
+      <div class="text-right mt-6">
+        <a href="{% if cart and cart.items.all %}{% url 'order_confirm' %}{% else %}#{% endif %}"
+           class="inline-block bg-gradient-to-r from-custom-darkgreen to-green-600 text-white px-6 py-3 rounded-xl shadow-lg font-semibold text-lg transition duration-300 hover:from-green-700 hover:to-custom-darkgreen-hover {% if not cart or not cart.items.all %}opacity-60 pointer-events-none{% endif %}">
+          ดำเนินการต่อ
+        </a>
+      </div>
+      
+  
   {% else %}
     <p class="text-xl text-gray-600 text-center py-10">ยังไม่มีสินค้าในตะกร้า</p>
   {% endif %}
