@@ -3,24 +3,36 @@
 
 {% block content %}
 <div class="max-w-3xl mx-auto p-6">
-  <h1 class="text-3xl font-extrabold text-custom-darkgreen mb-8 text-center">📦 รายละเอียดคำสั่งซื้อ</h1>
-  <div class="bg-custom-green border border-custom-darkgreen text-white px-6 py-4 rounded-lg mb-8 shadow-lg text-center">
-    <strong class="font-bold text-xl">✅ คำสั่งซื้อสำเร็จ!</strong>
-    <span class="block sm:inline text-base">ขอบคุณที่ใช้บริการกับเรา</span>
+  <h1 class="text-4xl font-extrabold text-custom-darkgreen mb-8 text-center">📦 รายละเอียดคำสั่งซื้อ</h1>
+
+  <!-- ✅ กล่องแจ้งเตือนคำสั่งซื้อสำเร็จ -->
+  <div class="bg-custom-lightpink text-custom-darkgreen px-6 py-5 rounded-2xl mb-8 shadow-lg border border-custom-green text-center">
+    <strong class="text-2xl font-bold block mb-1">✅ คำสั่งซื้อสำเร็จ!</strong>
+    <span class="block text-lg">ขอบคุณที่ใช้บริการกับ IMSUK</span>
   </div>
-  <div class="bg-white bg-opacity-90 backdrop-blur-md p-8 rounded-3xl shadow-xl">
-    <div class="space-y-4 text-lg text-gray-700">
-      <p><strong class="text-custom-darkgreen">หมายเลขคำสั่งซื้อ:</strong> {{ order.id }}</p>
-      <p><strong class="text-custom-darkgreen">สถานะ:</strong> {{ order.get_status_display }}</p>
-      <p><strong class="text-custom-darkgreen">รวมทั้งหมด:</strong> ฿{{ order.total_price }}</p>
-      <p><strong class="text-custom-darkgreen">เวลาที่สั่ง:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
+
+  <!-- ✅ กล่องรายละเอียด -->
+  <div class="bg-white p-8 rounded-3xl shadow-xl ring-1 ring-custom-pink">
+    <div class="space-y-4 text-lg text-gray-800">
+      <p><strong class="text-custom-darkgreen">📄 หมายเลขคำสั่งซื้อ:</strong> {{ order.id }}</p>
+      <p><strong class="text-custom-darkgreen">📌 สถานะ:</strong> {{ order.get_status_display }}</p>
+      <p><strong class="text-custom-darkgreen">💰 รวมทั้งหมด:</strong> ฿{{ order.total_price }}</p>
+      <p><strong class="text-custom-darkgreen">🕒 เวลาที่สั่ง:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
     </div>
-    <h2 class="mt-8 font-semibold text-xl text-custom-darkgreen">ที่อยู่จัดส่ง</h2>
-    <p class="text-lg mt-2">{{ order.delivery_address.address }}</p>
-    <p class="text-lg">เบอร์โทร: {{ order.delivery_address.phone }}</p>
+
+    <div class="mt-8">
+      <h2 class="text-xl font-bold text-custom-darkgreen mb-2">🚚 ที่อยู่จัดส่ง</h2>
+      <p class="text-lg text-gray-700">{{ order.delivery_address.address }}</p>
+      <p class="text-lg text-gray-700">📞 เบอร์โทร: {{ order.delivery_address.phone }}</p>
+    </div>
   </div>
-  <div class="text-center mt-6">
-    <a href="{% url 'order_history' %}" class="inline-block text-custom-pink hover:underline text-lg transition">↩ กลับไปยังประวัติการสั่งซื้อ</a>
+
+  <!-- ✅ ปุ่มย้อนกลับ -->
+  <div class="text-center mt-10">
+    <a href="{% url 'order_history' %}"
+       class="inline-block bg-custom-lightpink hover:bg-pink-200 text-custom-darkgreen px-6 py-3 rounded-full shadow font-semibold text-lg transition duration-300">
+      ↩ กลับไปยังประวัติการสั่งซื้อ
+    </a>
   </div>
 </div>
 {% endblock %}

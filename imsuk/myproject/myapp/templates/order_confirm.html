@@ -2,40 +2,45 @@
 {% block title %}ยืนยันคำสั่งซื้อ - IMSUK{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto bg-custom-lightpink/80 backdrop-blur-lg p-10 rounded-3xl shadow-2xl mt-10 ring-1 ring-custom-pink">
+<div class="max-w-4xl mx-auto bg-white p-10 rounded-3xl shadow-2xl mt-10 ring-1 ring-custom-pink">
   <h1 class="text-4xl font-extrabold text-custom-darkgreen mb-6 text-center">✅ ยืนยันคำสั่งซื้อ</h1>
-  <p class="text-lg text-gray-700 text-center mb-8">กรุณาตรวจสอบรายละเอียดรายการอาหารก่อนดำเนินการชำระเงิน</p>
+  <p class="text-lg text-gray-700 text-center mb-10">
+    กรุณาตรวจสอบรายละเอียดรายการอาหาร<br>ก่อนดำเนินการชำระเงิน
+  </p>
 
+  <!-- ตารางแสดงรายการอาหารในตะกร้า -->
   <div class="overflow-x-auto">
-    <table class="w-full rounded-xl overflow-hidden shadow-inner text-gray-800">
+    <table class="w-full rounded-xl overflow-hidden shadow-inner text-gray-800 border border-custom-pink">
       <thead>
-        <tr class="bg-custom-darkgreen text-white text-left text-lg">
-          <th class="py-4 px-4">เมนู</th>
+        <tr class="bg-custom-lightpink text-custom-darkgreen text-lg">
+          <th class="py-4 px-4 text-left">🍽 เมนู</th>
           <th class="py-4 px-4 text-center">จำนวน</th>
           <th class="py-4 px-4 text-right">รวม</th>
         </tr>
       </thead>
-      <tbody class="bg-white">
+      <tbody class="bg-custom-cream">
         {% for item in cart.items.all %}
-        <tr class="border-b hover:bg-custom-lightpink transition duration-150">
+        <tr class="border-t hover:bg-custom-lightpink transition duration-150">
           <td class="py-4 px-4">{{ item.menu_item.name }}</td>
           <td class="py-4 px-4 text-center">{{ item.quantity }}</td>
-          <td class="py-4 px-4 text-right font-medium">฿{{ item.subtotal }}</td>
+          <td class="py-4 px-4 text-right font-semibold">฿{{ item.subtotal }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 
-  <div class="text-right mt-8 mb-4">
+  <!-- ยอดรวมทั้งหมด -->
+  <div class="text-right mt-10 mb-4">
     <p class="text-2xl font-bold text-custom-darkgreen">
-      💰 ยอดรวมทั้งหมด: ฿{{ total }}
+      💰 ยอดรวมทั้งหมด: <span class="text-custom-darkgreen">฿{{ total }}</span>
     </p>
   </div>
 
-  <div class="flex justify-center mt-6">
+  <!-- ปุ่มไปชำระเงิน -->
+  <div class="flex justify-center mt-8">
     <a href="{% url 'payment_select' %}"
-       class="inline-block bg-custom-pink hover:bg-pink-500 text-white px-8 py-3 rounded-xl shadow-lg font-semibold text-xl transition">
+       class="bg-custom-pink hover:bg-pink-500 text-white px-8 py-3 rounded-full shadow-lg font-semibold text-xl transition duration-300 transform hover:scale-105 inline-flex items-center gap-2">
       💳 ไปชำระเงิน
     </a>
   </div>

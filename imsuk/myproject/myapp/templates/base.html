@@ -24,19 +24,36 @@
 
 {# ✅ ซ่อน Navbar เฉพาะหน้า login ที่มี url_name == 'login' #}
 {% if user.is_authenticated and request.resolver_match.url_name != 'login' %}
-  <header class="bg-custom-darkgreen text-white shadow-lg flex justify-between items-center px-6 py-4 sticky top-0 z-50">
-    <div class="flex items-center space-x-4">
-      <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-12 w-12 object-contain">
-      <a href="{% url 'home' %}" class="font-bold text-2xl tracking-wider hover:text-opacity-80 transition">IMSUK</a>
-    </div>
-    <nav class="flex items-center space-x-6 text-base font-medium tracking-wide uppercase">
-      <a href="{% url 'home' %}" class="hover:underline transition">หน้าแรก</a>
-      <a href="{% url 'profile' %}" class="hover:underline transition">โปรไฟล์</a>
-      <a href="{% url 'order_history' %}" class="hover:underline transition">ประวัติ</a>
-      <a href="{% url 'favorite_list' %}" class="hover:underline transition">ร้านโปรด</a>
-      <a href="{% url 'help_center' %}" class="text-sm font-normal tracking-normal hover:underline transition">ช่วยเหลือ</a>
-    </nav>
-  </header>
+<header class="bg-white shadow-md flex justify-between items-center px-6 py-4 sticky top-0 z-50">
+  <div class="flex items-center space-x-4">
+    <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-12 w-12 object-contain">
+    <a href="{% url 'home' %}" class="font-bold text-2xl tracking-wider text-custom-darkgreen">IMSUK</a>
+  </div>
+
+  <!-- ✅ เมนูบาร์วงรีพื้นหลังชมพูอ่อน -->
+  <nav class="flex items-center space-x-3 text-sm font-medium uppercase">
+    <a href="{% url 'home' %}"
+       class="bg-custom-lightpink text-custom-darkgreen px-4 py-2 rounded-full shadow hover:bg-pink-200 transition duration-200">
+      หน้าแรก
+    </a>
+    <a href="{% url 'profile' %}"
+       class="bg-custom-lightpink text-custom-darkgreen px-4 py-2 rounded-full shadow hover:bg-pink-200 transition duration-200">
+      โปรไฟล์
+    </a>
+    <a href="{% url 'order_history' %}"
+       class="bg-custom-lightpink text-custom-darkgreen px-4 py-2 rounded-full shadow hover:bg-pink-200 transition duration-200">
+      ประวัติ
+    </a>
+    <a href="{% url 'favorite_list' %}"
+       class="bg-custom-lightpink text-custom-darkgreen px-4 py-2 rounded-full shadow hover:bg-pink-200 transition duration-200">
+      ร้านโปรด
+    </a>
+    <a href="{% url 'help_center' %}"
+       class="bg-custom-lightpink text-custom-darkgreen px-4 py-2 rounded-full shadow hover:bg-pink-200 transition duration-200 tracking-normal font-normal lowercase">
+      ช่วยเหลือ
+    </a>
+  </nav>
+</header>
 
   {% if request.path == '/home/' %}
     <a href="{% url 'cart_view' %}" class="fixed bottom-8 right-8 bg-custom-green text-custom-darkgreen p-4 rounded-full shadow-xl z-50 flex items-center justify-center w-16 h-16 text-2xl hover:bg-green-200 transition">
