@@ -2,25 +2,26 @@
 {% block title %}โปรไฟล์ของฉัน{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-2xl mt-6">
-  <h2 class="text-3xl font-bold text-custom-darkgreen text-center mb-8">โปรไฟล์ของฉัน</h2>
-  <form method="post" action="{% url 'profile' %}" class="space-y-6">
+<div class="max-w-2xl mx-auto bg-white bg-opacity-90 backdrop-blur-md p-10 rounded-3xl shadow-2xl mt-10">
+  <h2 class="text-4xl font-extrabold text-custom-darkgreen text-center mb-10">👤 โปรไฟล์ของฉัน</h2>
+  <form method="post" action="{% url 'profile' %}" class="space-y-8">
     {% csrf_token %}
-    <div class="grid grid-cols-1 gap-6 mb-8">
+    <div class="space-y-6">
       <div>
         <label class="block text-base font-medium text-custom-darkgreen">ชื่อผู้ใช้</label>
-        <input type="text" name="username" value="{{ user.username }}" class="w-full mt-2 p-3 border border-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
+        <input type="text" name="username" value="{{ user.username }}" class="w-full mt-2 p-3 border border-custom-green rounded-xl focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
       </div>
       <div>
         <label class="block text-base font-medium text-custom-darkgreen">อีเมล</label>
-        <input type="email" name="email" value="{{ user.email }}" class="w-full mt-2 p-3 border border-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
+        <input type="email" name="email" value="{{ user.email }}" class="w-full mt-2 p-3 border border-custom-green rounded-xl focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
       </div>
       <div>
         <label class="block text-base font-medium text-custom-darkgreen">ชื่อเต็ม</label>
-        <input type="text" name="full_name" value="{{ user.first_name }}" class="w-full mt-2 p-3 border border-custom-green rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
+        <input type="text" name="full_name" value="{{ user.first_name }}" class="w-full mt-2 p-3 border border-custom-green rounded-xl focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
       </div>
     </div>
-    <div class="p-6 bg-custom-gray rounded-lg mb-8">
+
+    <div class="p-6 bg-custom-gray rounded-xl">
       <h3 class="text-xl font-semibold text-custom-darkgreen mb-4">ที่อยู่ของฉัน</h3>
       {% if default_address %}
         <p class="text-base text-gray-700 whitespace-pre-line">{{ default_address.address }}</p>
@@ -31,40 +32,43 @@
         <a href="{% url 'address_form' %}" class="inline-block mt-4 bg-custom-darkgreen text-white px-4 py-2 rounded-lg hover:bg-custom-darkgreen-hover transition duration-300 text-base">เพิ่มที่อยู่</a>
       {% endif %}
     </div>
-    <div class="p-6 bg-custom-lightpink rounded-lg shadow-inner mb-6">
+
+    <div class="p-6 bg-custom-lightpink rounded-xl shadow-inner">
       <h3 class="text-xl font-semibold text-custom-darkgreen mb-4">ตัวกรองความชอบ</h3>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         {% for label in filters %}
-          <div class="flex items-center space-x-3">
+          <label class="flex items-center space-x-3">
             <input type="checkbox" name="likes" value="{{ label }}" class="form-checkbox h-5 w-5 text-custom-darkgreen">
-            <label class="text-base text-gray-700">{{ label }}</label>
-          </div>
+            <span class="text-base text-gray-700">{{ label }}</span>
+          </label>
         {% endfor %}
-        <div class="flex items-center space-x-3 col-span-2 md:col-span-3">
+        <label class="flex items-center space-x-3 col-span-2 md:col-span-3">
           <input type="checkbox" id="other_like_toggle" name="likes" value="อื่นๆ" class="form-checkbox h-5 w-5 text-custom-darkgreen"
                  onchange="document.getElementById('other_like_input').classList.toggle('hidden')">
-          <label for="other_like_toggle" class="text-base text-gray-700">อื่นๆ</label>
+          <span class="text-base text-gray-700">อื่นๆ</span>
           <input type="text" name="other_like" id="other_like_input" class="hidden border border-custom-green rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
-        </div>
+        </label>
       </div>
+
       <h4 class="text-lg font-semibold text-custom-darkgreen mb-2 mt-6">ตัวกรองแพ้อาหาร</h4>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
         {% for allergen in allergens %}
-          <div class="flex items-center space-x-3">
+          <label class="flex items-center space-x-3">
             <input type="checkbox" name="allergens" value="{{ allergen }}" class="form-checkbox h-5 w-5 text-red-500">
-            <label class="text-base text-gray-700">{{ allergen }}</label>
-          </div>
+            <span class="text-base text-gray-700">{{ allergen }}</span>
+          </label>
         {% endfor %}
-        <div class="flex items-center space-x-3 col-span-2 md:col-span-3">
+        <label class="flex items-center space-x-3 col-span-2 md:col-span-3">
           <input type="checkbox" id="other_allergen_toggle" name="allergens" value="อื่นๆ" class="form-checkbox h-5 w-5 text-red-500"
                  onchange="document.getElementById('other_allergen_input').classList.toggle('hidden')">
-          <label for="other_allergen_toggle" class="text-base text-gray-700">อื่นๆ</label>
+          <span class="text-base text-gray-700">อื่นๆ</span>
           <input type="text" name="other_allergen" id="other_allergen_input" class="hidden border border-custom-green rounded p-2 w-1/2 focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
-        </div>
+        </label>
       </div>
     </div>
+
     <div class="text-right">
-      <button type="submit" name="save_profile" class="bg-custom-darkgreen text-white px-6 py-3 rounded-lg hover:bg-custom-darkgreen-hover transition duration-300 font-semibold text-lg">บันทึกการเปลี่ยนแปลงทั้งหมด</button>
+      <button type="submit" name="save_profile" class="bg-custom-darkgreen text-white px-6 py-3 rounded-xl hover:bg-custom-darkgreen-hover transition duration-300 font-semibold text-lg">บันทึกการเปลี่ยนแปลงทั้งหมด</button>
     </div>
   </form>
 </div>

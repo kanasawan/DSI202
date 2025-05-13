@@ -3,13 +3,13 @@
 
 {% block content %}
 <div class="max-w-3xl mx-auto p-6">
-  <h1 class="text-3xl font-bold text-custom-darkgreen mb-6">รายละเอียดคำสั่งซื้อ</h1>
-  <div class="bg-custom-green border border-custom-darkgreen text-white px-6 py-4 rounded-lg mb-8 shadow-lg">
+  <h1 class="text-3xl font-extrabold text-custom-darkgreen mb-8 text-center">📦 รายละเอียดคำสั่งซื้อ</h1>
+  <div class="bg-custom-green border border-custom-darkgreen text-white px-6 py-4 rounded-lg mb-8 shadow-lg text-center">
     <strong class="font-bold text-xl">✅ คำสั่งซื้อสำเร็จ!</strong>
     <span class="block sm:inline text-base">ขอบคุณที่ใช้บริการกับเรา</span>
   </div>
-  <div class="bg-white p-6 rounded-xl shadow-2xl">
-    <div class="space-y-4 text-lg">
+  <div class="bg-white bg-opacity-90 backdrop-blur-md p-8 rounded-3xl shadow-xl">
+    <div class="space-y-4 text-lg text-gray-700">
       <p><strong class="text-custom-darkgreen">หมายเลขคำสั่งซื้อ:</strong> {{ order.id }}</p>
       <p><strong class="text-custom-darkgreen">สถานะ:</strong> {{ order.get_status_display }}</p>
       <p><strong class="text-custom-darkgreen">รวมทั้งหมด:</strong> ฿{{ order.total_price }}</p>
@@ -19,6 +19,8 @@
     <p class="text-lg mt-2">{{ order.delivery_address.address }}</p>
     <p class="text-lg">เบอร์โทร: {{ order.delivery_address.phone }}</p>
   </div>
-  <a href="{% url 'order_history' %}" class="mt-6 inline-block text-custom-pink hover:underline text-lg transition">↩ กลับไปยังประวัติการสั่งซื้อ</a>
+  <div class="text-center mt-6">
+    <a href="{% url 'order_history' %}" class="inline-block text-custom-pink hover:underline text-lg transition">↩ กลับไปยังประวัติการสั่งซื้อ</a>
+  </div>
 </div>
 {% endblock %}

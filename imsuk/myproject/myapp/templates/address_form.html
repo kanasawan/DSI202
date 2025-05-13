@@ -1,15 +1,22 @@
 {% extends 'base.html' %}
-{% block title %}แก้ไขที่อยู่{% endblock %}
+{% block title %}{{ editing|yesno:"แก้ไขที่อยู่,เพิ่มที่อยู่" }}{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-custom-lightpink p-8 rounded-xl shadow-2xl mt-10">
-  <h2 class="text-3xl font-bold text-custom-darkgreen text-center mb-8">
-    {% if editing %} แก้ไขที่อยู่ {% else %} เพิ่มที่อยู่ {% endif %}
+<div class="max-w-xl mx-auto bg-white bg-opacity-80 backdrop-blur-lg p-10 rounded-3xl shadow-2xl mt-14 ring-1 ring-custom-green hover:ring-4 transition duration-300">
+  <h2 class="text-4xl font-extrabold text-custom-darkgreen text-center mb-10 drop-shadow-sm">
+    {{ editing|yesno:"✏️ แก้ไขที่อยู่,➕ เพิ่มที่อยู่" }}
   </h2>
+
   <form method="post" class="space-y-6">
     {% csrf_token %}
-    {{ form.as_p|safe }}
-    <button type="submit" class="w-full bg-custom-darkgreen text-white py-3 rounded-lg hover:bg-custom-darkgreen-hover transition duration-300 font-semibold text-lg">บันทึก</button>
+    <div class="space-y-4 text-gray-800">
+      {{ form.as_p|safe }}
+    </div>
+
+    <button type="submit"
+      class="w-full py-4 bg-gradient-to-r from-custom-darkgreen to-green-600 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-green-700 hover:to-custom-darkgreen-hover transition text-lg font-semibold tracking-wide">
+      💾 บันทึกข้อมูล
+    </button>
   </form>
 </div>
 {% endblock %}

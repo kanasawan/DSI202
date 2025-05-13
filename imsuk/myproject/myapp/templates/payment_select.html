@@ -2,24 +2,21 @@
 {% block title %}เลือกวิธีชำระเงิน - IMSUK{% endblock %}
 
 {% block content %}
-<div class="max-w-lg mx-auto p-6">
-  <h1 class="text-3xl font-bold text-custom-darkgreen mb-6">เลือกวิธีชำระเงิน</h1>
-  <form method="post" class="bg-white p-8 rounded-xl shadow-2xl">
+<div class="max-w-lg mx-auto p-8 bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-2xl mt-10">
+  <h1 class="text-3xl font-extrabold text-custom-darkgreen mb-8 text-center">💳 เลือกวิธีชำระเงิน</h1>
+  <form method="post" class="space-y-8">
     {% csrf_token %}
-    <p class="mb-6 text-lg text-gray-700">กรุณาเลือกวิธีการชำระเงิน:</p>
-    <div class="mb-4">
-      <label class="inline-flex items-center cursor-pointer">
-        <input type="radio" name="method" value="cod" class="form-radio h-5 w-5 text-custom-darkgreen mr-3" required>
-        <span class="text-lg text-gray-700">ชำระเงินปลายทาง (COD)</span>
+    <div class="space-y-4 text-lg text-gray-700">
+      <label class="flex items-center gap-4 cursor-pointer">
+        <input type="radio" name="method" value="cod" class="form-radio h-5 w-5 text-custom-darkgreen" required>
+        ชำระเงินปลายทาง (COD)
+      </label>
+      <label class="flex items-center gap-4 cursor-pointer">
+        <input type="radio" name="method" value="credit" class="form-radio h-5 w-5 text-custom-darkgreen" required>
+        บัตรเครดิต/เดบิต
       </label>
     </div>
-    <div class="mb-8">
-      <label class="inline-flex items-center cursor-pointer">
-        <input type="radio" name="method" value="credit" class="form-radio h-5 w-5 text-custom-darkgreen mr-3" required>
-        <span class="text-lg text-gray-700">บัตรเครดิต/เดบิต</span>
-      </label>
-    </div>
-    <button type="submit" class="w-full bg-custom-darkgreen text-white px-6 py-3 rounded-lg hover:bg-custom-darkgreen-hover transition duration-300 font-semibold text-lg">ยืนยันการสั่งซื้อ</button>
+    <button type="submit" class="w-full bg-gradient-to-r from-custom-darkgreen to-green-600 text-white py-4 rounded-xl hover:from-green-700 hover:to-custom-darkgreen-hover shadow-lg transition duration-300 font-semibold text-lg">ยืนยันการสั่งซื้อ</button>
   </form>
 </div>
 {% endblock %}

@@ -3,21 +3,21 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto p-6">
-  <h2 class="text-3xl font-bold text-custom-darkgreen mb-6">ประวัติการสั่งซื้อ</h2>
+  <h2 class="text-4xl font-extrabold text-custom-darkgreen mb-10 text-center">📜 ประวัติการสั่งซื้อ</h2>
   {% if orders %}
     <ul class="space-y-6">
       {% for order in orders %}
-        <li class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+        <li class="p-6 bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-lg hover:shadow-2xl transition duration-300">
           <p class="font-semibold text-xl text-custom-darkgreen">คำสั่งซื้อ #{{ order.id }}</p>
-          <p class="text-lg">รวมทั้งหมด: <span class="text-custom-darkgreen font-bold">฿{{ order.total_price }}</span></p>
-          <p class="text-lg">สถานะ: 
+          <p class="text-lg text-gray-700">รวมทั้งหมด: <span class="text-custom-darkgreen font-bold">฿{{ order.total_price }}</span></p>
+          <p class="text-lg text-gray-700">สถานะ: 
             {% if order.status == 'completed' %}
               <span class="text-custom-darkgreen font-semibold">คำสั่งซื้อสำเร็จ</span>
             {% else %}
-              <span class="text-gray-700">{{ order.get_status_display }}</span>
+              <span class="text-gray-600">{{ order.get_status_display }}</span>
             {% endif %}
           </p>
-          <p class="text-lg">เมื่อ: {{ order.created_at|date:"d/m/Y H:i" }}</p>
+          <p class="text-lg text-gray-600">เมื่อ: {{ order.created_at|date:"d/m/Y H:i" }}</p>
         </li>
       {% endfor %}
     </ul>

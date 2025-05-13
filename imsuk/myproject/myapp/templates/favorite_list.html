@@ -3,29 +3,29 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto p-6">
-  <h1 class="text-3xl font-bold text-custom-darkgreen mb-6">ร้านโปรดของคุณ</h1>
+  <h1 class="text-4xl font-extrabold text-custom-darkgreen mb-10 text-center">❤️ ร้านโปรดของคุณ</h1>
   {% for fav in favorites %}
     {% with first_menu=fav.restaurant.menu_items.first %}
-      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition duration-300 p-6 mb-6">
+      <div class="bg-white bg-opacity-80 backdrop-blur-md rounded-3xl shadow-lg hover:shadow-2xl transition duration-300 p-6 mb-6">
         {% if first_menu and first_menu.image %}
-          <img src="{{ first_menu.image.url }}" alt="{{ first_menu.name }}" class="h-48 w-full object-cover rounded-lg mb-4">
+          <img src="{{ first_menu.image.url }}" alt="{{ first_menu.name }}" class="h-48 w-full object-cover rounded-xl mb-4">
         {% else %}
-          <div class="h-48 w-full bg-gray-200 flex items-center justify-center rounded-lg text-gray-400">ไม่มีรูปภาพ</div>
+          <div class="h-48 w-full bg-gray-200 flex items-center justify-center rounded-xl text-gray-400">ไม่มีรูปภาพ</div>
         {% endif %}
-        <h2 class="text-xl font-semibold text-custom-darkgreen">{{ fav.restaurant.name }}</h2>
+        <h2 class="text-xl font-bold text-custom-darkgreen">{{ fav.restaurant.name }}</h2>
         <p class="text-base text-gray-600">{{ fav.restaurant.category.name }}</p>
         <p class="text-base text-gray-500">{{ fav.restaurant.address }}</p>
         {% if first_menu %}
-          <a href="{% url 'menu_detail' first_menu.id %}" class="text-custom-pink font-semibold text-lg block mt-4 hover:underline transition">ดูเมนูร้านนี้</a>
+          <a href="{% url 'menu_detail' first_menu.id %}" class="text-custom-pink font-semibold text-base block mt-4 hover:underline transition">ดูเมนูร้านนี้</a>
         {% endif %}
         <form action="{% url 'remove_favorite' fav.restaurant.id %}" method="post" class="inline-block mt-4">
           {% csrf_token %}
-          <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 text-base">ลบร้านโปรด</button>
+          <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition text-sm">ลบร้านโปรด</button>
         </form>
       </div>
     {% endwith %}
   {% empty %}
-    <p class="text-xl text-gray-500 text-center py-8">คุณยังไม่มีร้านโปรดในขณะนี้</p>
+    <p class="text-xl text-gray-500 text-center py-10">คุณยังไม่มีร้านโปรดในขณะนี้</p>
   {% endfor %}
 </div>
 {% endblock %}
