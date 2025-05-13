@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}หน้าแรก - IMSUK{% endblock %}
 
 {% block content %}
 <div class="max-w-6xl mx-auto p-6">
   <h1 class="text-4xl font-extrabold text-custom-darkgreen mb-8 text-center">🍱 เมนูอาหารทั้งหมด</h1>
+
+  <!-- ช่องค้นหา -->
   <form method="get" action="{% url 'home' %}" class="mb-10">
     <div class="flex items-center">
       <div class="relative flex-grow">
@@ -18,40 +21,95 @@
     </div>
   </form>
 
+  <!-- รายการเมนู -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for item in menu_items %}
-      <div class="bg-custom-lightpink rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+      <div class="bg-custom-lightpink rounded-2xl shadow-md p-4 hover:shadow-xl transition duration-300 relative">
         {% if item.image %}
-          <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-cover">
+          <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-cover rounded-xl mb-3">
         {% else %}
-          <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+          <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500 rounded-xl mb-3">
             ไม่มีรูปภาพ
           </div>
         {% endif %}
-        <div class="p-4">
-          <h2 class="text-xl font-bold text-custom-darkgreen mb-1">{{ item.name }}</h2>
-          <p class="text-sm italic text-gray-600 mb-2">จากร้าน <span class="text-custom-brown font-medium">{{ item.restaurant.name }}</span></p>
 
-          {% if item.promotion_set.all %}
-            <div class="flex items-center mb-2">
-              <span class="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded mr-2">-{{ item.promotion_set.first.discount_percent }}%</span>
-              <span class="text-custom-darkgreen font-semibold">{{ item.sale_price }} ฿</span>
-              <span class="text-gray-500 line-through ml-2">{{ item.promotion_set.first.original_price }} ฿</span>
+        <!-- ❤️ หัวใจร้านโปรด -->
+        <a href="{% url 'add_favorite' item.restaurant.id %}"
+           class="absolute top-3 right-3 bg-white rounded-full p-2 shadow hover:scale-110 transition">
+          <span class="text-red-500 text-xl">❤️</span>
+        </a>
+
+        <h2 class="text-xl font-bold text-custom-darkgreen mb-1">{{ item.name }}</h2>
+        <p class="text-sm italic text-gray-600 mb-2">จากร้าน <span class="text-custom-brown font-medium">{{ item.restaurant.name }}</span></p>
+
+        <p class="text-custom-darkgreen font-semibold text-lg mb-2">฿{{ item.sale_price }}</p>
+
+        <p class="text-sm text-gray-600 flex items-center mb-2">
+          <span class="text-xl mr-1">⏰</span>
+          {{ item.restaurant.open_time|time:'H:i' }} - {{ item.restaurant.close_time|time:'H:i' }}
+        </p>
+
+        <!-- ปุ่มดูรายละเอียด -->
+        <a href="{% url 'menu_detail' item.id %}"
+           class="inline-block text-white bg-custom-pink px-4 py-2 rounded-xl font-medium shadow hover:bg-pink-500 transition mb-4">
+          📋 ดูรายละเอียด
+        </a>
+
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'add_to_cart' item.id %}" class="quantity-form mt-2">
+          {% csrf_token %}
+          <div class="flex items-center justify-between space-x-4">
+            <!-- ปุ่มเพิ่ม/ลด -->
+            <div class="flex items-center space-x-3 border border-gray-300 rounded-full px-4 py-2 shadow bg-white">
+              <button type="button"
+                      onclick="changeQty({{ item.id }}, -1);"
+                      class="bg-red-400 text-white w-8 h-8 rounded-full flex justify-center items-center text-lg font-bold"
+                      id="btn-decrease-{{ item.id }}">−</button>
+
+              <span id="qty-{{ item.id }}" class="text-lg font-semibold w-8 text-center">0</span>
+              <input type="hidden" name="quantity" id="input-qty-{{ item.id }}" value="0">
+
+              <button type="button"
+                      onclick="changeQty({{ item.id }}, 1);"
+                      class="bg-green-500 text-white w-8 h-8 rounded-full flex justify-center items-center text-lg font-bold">+</button>
             </div>
-          {% else %}
-            <p class="text-custom-darkgreen font-semibold mb-2">฿{{ item.sale_price }}</p>
-          {% endif %}
 
-          <p class="text-sm text-gray-600 flex items-center">
-            <span class="text-xl mr-1">⏰</span>
-            {{ item.restaurant.open_time|time:'H:i' }} - {{ item.restaurant.close_time|time:'H:i' }}
-          </p>
-          <a href="{% url 'menu_detail' item.id %}" class="text-custom-pink hover:underline text-base mt-2 inline-block transition">ดูรายละเอียด</a>
-        </div>
+            <!-- ปุ่มยืนยัน -->
+            <button type="submit"
+                    class="bg-custom-darkgreen text-white px-4 py-2 rounded-xl shadow font-semibold disabled:opacity-50 transition"
+                    id="confirm-btn-{{ item.id }}" disabled>
+              ✅ ยืนยัน
+            </button>
+          </div>
+        </form>
+        {% else %}
+          <p class="text-sm text-center text-gray-500 mt-2">กรุณา <a href="{% url 'login' %}" class="text-blue-600 underline">ล็อกอิน</a> เพื่อสั่งอาหาร</p>
+        {% endif %}
       </div>
     {% empty %}
       <p class="text-xl text-gray-600 col-span-full text-center py-6">ไม่พบเมนูอาหารที่ค้นหา</p>
     {% endfor %}
   </div>
 </div>
+
+<!-- ✅ JavaScript ควบคุมจำนวน -->
+<script>
+function changeQty(itemId, change) {
+  const qtySpan = document.getElementById(`qty-${itemId}`);
+  const qtyInput = document.getElementById(`input-qty-${itemId}`);
+  const confirmBtn = document.getElementById(`confirm-btn-${itemId}`);
+  const decreaseBtn = document.getElementById(`btn-decrease-${itemId}`);
+
+  let current = parseInt(qtySpan.textContent);
+  let newQty = current + change;
+
+  if (newQty < 0) newQty = 0;
+
+  qtySpan.textContent = newQty;
+  qtyInput.value = newQty;
+
+  confirmBtn.disabled = newQty === 0;
+  decreaseBtn.disabled = newQty === 0;
+}
+</script>
 {% endblock %}

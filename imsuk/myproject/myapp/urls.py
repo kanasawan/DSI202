@@ -26,6 +26,9 @@ urlpatterns = [
     path('check-address/', views.check_address_then_redirect, name='check_address_then_redirect'),
     path('help-center/', views.help_center, name='help_center'),
     path('profile/', views.profile_view, name='profile'),
+    path('cart/update/<int:item_id>/', views.update_cart_quantity, name='update_cart_quantity'),
+    path('favorite/add/<int:restaurant_id>/', views.add_favorite, name='add_favorite'),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

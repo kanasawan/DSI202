@@ -21,7 +21,21 @@ def home(request):
         menu_items = MenuItem.objects.filter(name__icontains=query, is_available=True)
     else:
         menu_items = MenuItem.objects.filter(is_available=True)
-    return render(request, 'home.html', {'menu_items': menu_items})
+
+    cart_items = {}
+    if request.user.is_authenticated:
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart:
+            cart_items = {
+                str(item.menu_item.id): item.quantity
+                for item in cart.items.all()
+            }
+
+    return render(request, 'home.html', {
+        'menu_items': menu_items,
+        'cart_items': cart_items  # ✅ ต้องเป็น dict!
+    })
+
 
 
 # 1.1 ดูรายละเอียดเมนู
@@ -38,12 +52,15 @@ def menu_detail(request, item_id):
 @login_required
 def add_to_cart(request, item_id):
     item = get_object_or_404(MenuItem, id=item_id)
-    cart, _ = Cart.objects.get_or_create(user=request.user)
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=item)
-    if not created:
-        cart_item.quantity += 1
+    quantity = int(request.POST.get('quantity', 1))
+
+    if quantity > 0:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=item)
+        cart_item.quantity = quantity
         cart_item.save()
-    return redirect('cart_view')
+
+    return redirect('cart_view')  # ✅ ไปหน้าตะกร้า
 
 
 # 2.1 ดูตะกร้า
@@ -189,10 +206,15 @@ def order_history(request):
 
 
 # 7. รายการโปรด
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Favorite
+
 @login_required
 def favorite_list(request):
     favorites = Favorite.objects.filter(user=request.user)
     return render(request, 'favorite_list.html', {'favorites': favorites})
+
 
 
 @require_POST
