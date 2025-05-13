@@ -17,6 +17,7 @@
       </button>
     </div>
   </form>
+
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for item in menu_items %}
       <div class="bg-custom-lightpink rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
@@ -28,8 +29,9 @@
           </div>
         {% endif %}
         <div class="p-4">
-          <h2 class="text-xl font-bold text-custom-darkgreen mb-1">{{ item.restaurant.name }}</h2>
-          <p class="text-sm text-custom-brown italic mb-2">อร่อยส่งตรงถึงหน้าประตูคุณ!</p>
+          <h2 class="text-xl font-bold text-custom-darkgreen mb-1">{{ item.name }}</h2>
+          <p class="text-sm italic text-gray-600 mb-2">จากร้าน <span class="text-custom-brown font-medium">{{ item.restaurant.name }}</span></p>
+
           {% if item.promotion_set.all %}
             <div class="flex items-center mb-2">
               <span class="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded mr-2">-{{ item.promotion_set.first.discount_percent }}%</span>
@@ -39,7 +41,11 @@
           {% else %}
             <p class="text-custom-darkgreen font-semibold mb-2">฿{{ item.sale_price }}</p>
           {% endif %}
-          <p class="text-sm text-gray-600 flex items-center"><span class="text-xl mr-1">⏰</span> {{ item.restaurant.open_time|time:'H:i' }} - {{ item.restaurant.close_time|time:'H:i' }}</p>
+
+          <p class="text-sm text-gray-600 flex items-center">
+            <span class="text-xl mr-1">⏰</span>
+            {{ item.restaurant.open_time|time:'H:i' }} - {{ item.restaurant.close_time|time:'H:i' }}
+          </p>
           <a href="{% url 'menu_detail' item.id %}" class="text-custom-pink hover:underline text-base mt-2 inline-block transition">ดูรายละเอียด</a>
         </div>
       </div>

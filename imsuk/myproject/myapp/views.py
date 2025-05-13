@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from datetime import timedelta
+from django.conf import settings
 
 from .models import (
     Restaurant, MenuItem, Cart, CartItem, Order,
@@ -111,27 +112,52 @@ def order_confirm(request):
     total = sum(item.subtotal() for item in cart.items.all())
     return render(request, 'order_confirm.html', {'cart': cart, 'total': total})
 
+from django.core.files.storage import FileSystemStorage
+from .models import Payment
+import os
 
-# 4.1 หน้าชำระเงิน
 @login_required
 def payment_select(request):
+    cart = Cart.objects.get(user=request.user)
+    total = sum(item.subtotal() for item in cart.items.all())
+
     if request.method == 'POST':
-        cart = Cart.objects.get(user=request.user)
-        total = sum(item.subtotal() for item in cart.items.all())
+        method = request.POST.get('method')
+        slip = request.FILES.get('slip')  # สำหรับ QR
 
         try:
             address = DeliveryAddress.objects.get(user=request.user)
         except DeliveryAddress.DoesNotExist:
             return redirect('address_form')
 
+        if method == 'qr' and not slip:
+            # ถ้าเลือก QR แต่ไม่อัปโหลดสลิป
+            messages.error(request, "กรุณาอัปโหลดสลิปการโอนเงินก่อนยืนยันคำสั่งซื้อ")
+            return redirect('payment_select')
+
+        # สร้างคำสั่งซื้อ
         order = Order.objects.create(
             user=request.user,
             cart=cart,
             delivery_address=address,
             total_price=total,
-            status='completed',  # ✅ กำหนดเป็นเสร็จสิ้นทันที
+            status='completed',
             estimated_delivery_time=timedelta(minutes=45)
         )
+
+        # สร้างข้อมูลการชำระเงิน
+        payment = Payment.objects.create(
+            order=order,
+            method=method,
+            status='paid' if method != 'qr' else 'pending',
+        )
+
+        # เก็บไฟล์สลิป (ถ้ามี)
+        if slip:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'slips'))
+            filename = fs.save(slip.name, slip)
+            payment.slip_image = f'slips/{filename}'
+            payment.save()
 
         cart.items.all().delete()  # ล้างตะกร้า
 
@@ -142,7 +168,10 @@ def payment_select(request):
 
         return redirect('order_detail', order_id=order.id)
 
-    return render(request, 'payment_select.html')
+    return render(request, 'payment_select.html', {
+        'total': total
+    })
+
 
 
 # 5. รายละเอียดคำสั่งซื้อ
@@ -244,3 +273,28 @@ def check_address_then_redirect(request):
 # 11. ศูนย์ช่วยเหลือ
 def help_center(request):
     return render(request, 'help_center.html')
+
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, get_object_or_404
+from .models import Cart, CartItem, MenuItem
+
+@login_required
+@require_POST
+def update_cart_quantity(request, item_id):
+    action = request.POST.get('action')
+    item = get_object_or_404(MenuItem, id=item_id)
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, menu_item=item)
+
+    if action == 'increase':
+        cart_item.quantity += 1
+        cart_item.save()
+    elif action == 'decrease':
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            cart_item.save()
+        else:
+            cart_item.delete()
+
+    return redirect('cart_view')  # หรือใช้ redirect('home') หากเรียกจากหน้า home

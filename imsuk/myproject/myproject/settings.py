@@ -79,6 +79,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -86,3 +87,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
+
+ALLOWED_HOSTS = ['*']  # เพื่อให้เปิดได้จาก container ภายนอก
