@@ -22,3 +22,5 @@ class DeliveryAddressForm(forms.ModelForm):
             'address': forms.Textarea(attrs={'rows': 3, 'class': 'w-full p-2 border rounded'}),
             'phone': forms.TextInput(attrs={'class': 'w-full p-2 border rounded'})
         }
+
+

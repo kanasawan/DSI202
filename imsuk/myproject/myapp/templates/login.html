@@ -5,11 +5,10 @@
 
 {% block content %}
 <!-- ขอบบน -->
-<div class="fixed top-0 left-0 w-screen h-10 bg-custom-pink z-50"></div>
+<div class="fixed top-0 left-0 w-screen h-10 bg-custom-pink z-50 shadow-md"></div>
 
 <!-- พื้นหลังหลักแบบทูโทนและตกแต่งเบา ๆ -->
-<div class="min-h-screen bg-gradient-to-br from-[#fdf6e3] to-[#f4e9d8] py-12 px-4 md:px-6 relative overflow-hidden">
-
+<div class="min-h-screen bg-gradient-to-br from-[#fdf6e3] to-[#f4e9d8] py-16 px-4 md:px-6 relative overflow-hidden">
   <!-- วงกลมตกแต่งพื้นหลัง -->
   <div class="absolute w-[300px] h-[300px] bg-custom-green opacity-20 rounded-full blur-3xl top-[-100px] left-[-60px]"></div>
   <div class="absolute w-[250px] h-[250px] bg-custom-pink opacity-20 rounded-full blur-2xl bottom-[-80px] right-[-40px]"></div>
@@ -17,37 +16,37 @@
   <!-- เนื้อหาอยู่กึ่งกลาง -->
   <div class="relative z-10 max-w-4xl mx-auto text-center">
     <!-- โลโก้และหัวข้อ -->
-    <div class="mb-10">
-      <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-20 w-20 mx-auto mb-4 drop-shadow-md">
-      <h1 class="text-4xl font-extrabold text-custom-darkgreen tracking-wide">IMSUK</h1>
-      <p class="text-lg text-custom-brown font-medium mt-2">บริการสั่งอาหารใกล้บ้านคุณ</p>
-      <p class="text-sm text-gray-600 mt-1">ทุกมื้อคือความสุข อร่อยได้ในไม่กี่คลิก</p>
+    <div class="mb-12">
+      <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-24 w-24 mx-auto mb-4 drop-shadow-xl">
+      <h1 class="text-5xl font-extrabold text-custom-darkgreen tracking-wide">IMSUK</h1>
+      <p class="text-lg text-custom-brown font-medium mt-3">บริการสั่งอาหารใกล้บ้านคุณ</p>
+      <p class="text-sm text-gray-600 mt-1 italic">ทุกมื้อคือความสุข อร่อยได้ในไม่กี่คลิก</p>
     </div>
 
-    <!-- ฟอร์ม Login แบบไม่มีกรอบกล่อง -->
-    <div class="max-w-md mx-auto mb-12">
-      <h2 class="text-xl font-bold text-custom-darkgreen text-center mb-6">เข้าสู่ระบบ</h2>
+    <!-- ฟอร์ม Login -->
+    <div class="max-w-md mx-auto mb-14 bg-white bg-opacity-80 rounded-3xl p-10 shadow-2xl backdrop-blur-md">
+      <h2 class="text-2xl font-bold text-custom-darkgreen text-center mb-6">เข้าสู่ระบบ</h2>
 
-      <form method="post" action="{% url 'login' %}?next=/check-address/" class="space-y-5">
+      <form method="post" action="{% url 'login' %}?next=/check-address/" class="space-y-6">
         {% csrf_token %}
         {% if form.errors %}
-          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm text-center">
-            ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm text-center shadow-sm">
+            ❌ ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง
           </div>
         {% endif %}
         <div>
           <label for="username" class="block text-sm font-medium text-custom-darkgreen mb-1 text-left">ชื่อผู้ใช้</label>
           <input type="text" name="username" id="username"
-                 class="w-full px-4 py-3 rounded-xl border border-custom-green focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
+                 class="w-full px-4 py-3 border border-custom-green rounded-xl focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition shadow-sm">
         </div>
         <div>
           <label for="password" class="block text-sm font-medium text-custom-darkgreen mb-1 text-left">รหัสผ่าน</label>
           <input type="password" name="password" id="password"
-                 class="w-full px-4 py-3 rounded-xl border border-custom-green focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition">
+                 class="w-full px-4 py-3 border border-custom-green rounded-xl focus:outline-none focus:ring-2 focus:ring-custom-darkgreen transition shadow-sm">
         </div>
         <button type="submit"
                 class="w-full bg-custom-darkgreen text-white py-3 rounded-xl hover:bg-green-700 font-semibold text-lg shadow-md transition">
-          เข้าสู่ระบบ
+          🔐 เข้าสู่ระบบ
         </button>
       </form>
 
@@ -58,16 +57,16 @@
 
     <!-- จุดเด่นระบบ 3 กล่อง -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-white rounded-xl p-6 shadow-md border border-custom-green hover:scale-[1.03] transition duration-300">
-        <h2 class="text-lg font-bold text-custom-darkgreen mb-1">🚀 รวดเร็วทันใจ</h2>
+      <div class="bg-white rounded-2xl p-6 shadow-md border border-custom-green hover:scale-[1.03] transition duration-300">
+        <h2 class="text-lg font-bold text-custom-darkgreen mb-2">🚀 รวดเร็วทันใจ</h2>
         <p class="text-sm text-gray-600">ส่งไวภายใน 30 นาที จากร้านที่คุณไว้ใจ</p>
       </div>
-      <div class="bg-white rounded-xl p-6 shadow-md border border-custom-green hover:scale-[1.03] transition duration-300">
-        <h2 class="text-lg font-bold text-custom-darkgreen mb-1">🧾 ใช้งานง่าย</h2>
+      <div class="bg-white rounded-2xl p-6 shadow-md border border-custom-green hover:scale-[1.03] transition duration-300">
+        <h2 class="text-lg font-bold text-custom-darkgreen mb-2">🧾 ใช้งานง่าย</h2>
         <p class="text-sm text-gray-600">ระบบสั่งอาหารเรียบง่าย สะดวกทุกขั้นตอน</p>
       </div>
-      <div class="bg-white rounded-xl p-6 shadow-md border border-custom-green hover:scale-[1.03] transition duration-300">
-        <h2 class="text-lg font-bold text-custom-darkgreen mb-1">🍱 หลากหลาย</h2>
+      <div class="bg-white rounded-2xl p-6 shadow-md border border-custom-green hover:scale-[1.03] transition duration-300">
+        <h2 class="text-lg font-bold text-custom-darkgreen mb-2">🍱 หลากหลาย</h2>
         <p class="text-sm text-gray-600">ร้านไทย จีน ฝรั่ง ของหวาน ครบในแอปเดียว</p>
       </div>
     </div>
@@ -76,6 +75,6 @@
 
 <!-- ขอบล่างพร้อมอีเมล -->
 <div class="fixed bottom-0 left-0 w-screen h-10 bg-custom-pink flex items-center justify-center z-50">
-  <p class="text-black text-sm">ติดต่อเรา:  support@imsuk.example</p>
+  <p class="text-black text-sm">📧 ติดต่อเรา: <span class="underline">support@imsuk.example</span></p>
 </div>
 {% endblock %}

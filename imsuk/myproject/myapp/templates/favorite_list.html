@@ -7,28 +7,29 @@
 
   {% for fav in favorites %}
     {% with first_menu=fav.restaurant.menu_items.first %}
-      <div class="bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-xl hover:shadow-2xl transition duration-300 mb-8 p-6">
+      <div class="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition duration-300 mb-8 p-6 ring-1 ring-custom-pink">
         <div class="flex flex-col md:flex-row gap-6 items-start">
-          <!-- รูปด้านซ้าย -->
+          
+          <!-- ✅ รูปด้านซ้าย -->
           {% if first_menu and first_menu.image %}
             <img src="{{ first_menu.image.url }}" alt="{{ first_menu.name }}"
-                 class="w-full md:w-64 h-48 object-cover rounded-xl shadow-md">
+                 class="w-full md:w-64 h-48 object-cover rounded-xl shadow-md ring-1 ring-custom-green">
           {% else %}
-            <div class="w-full md:w-64 h-48 bg-gray-200 flex items-center justify-center text-gray-400 rounded-xl shadow-inner">
+            <div class="w-full md:w-64 h-48 bg-gray-100 flex items-center justify-center text-gray-400 rounded-xl shadow-inner">
               ไม่มีรูปภาพ
             </div>
           {% endif %}
 
-          <!-- รายละเอียดด้านขวา -->
-          <div class="flex-1 space-y-2">
+          <!-- ✅ รายละเอียดร้าน -->
+          <div class="flex-1 space-y-3">
             <h2 class="text-2xl font-bold text-custom-darkgreen">{{ fav.restaurant.name }}</h2>
             <p class="text-sm text-gray-500">{{ fav.restaurant.category.name }}</p>
-            <p class="text-base text-gray-600">{{ fav.restaurant.address }}</p>
+            <p class="text-base text-gray-700">{{ fav.restaurant.address }}</p>
 
             <form action="{% url 'remove_favorite' fav.restaurant.id %}" method="post" class="mt-4">
               {% csrf_token %}
               <button type="submit"
-                      class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition font-medium text-sm inline-flex items-center gap-2">
+                      class="bg-custom-pink text-white px-5 py-2 rounded-full hover:bg-pink-500 transition font-semibold text-sm inline-flex items-center gap-2 shadow">
                 🗑 ลบร้านโปรด
               </button>
             </form>
@@ -37,7 +38,14 @@
       </div>
     {% endwith %}
   {% empty %}
-    <p class="text-xl text-gray-500 text-center py-10">คุณยังไม่มีร้านโปรดในขณะนี้</p>
+    <div class="text-center py-16">
+      <p class="text-5xl mb-4">😢</p>
+      <p class="text-xl text-gray-500">คุณยังไม่มีร้านโปรดในขณะนี้</p>
+      <a href="{% url 'home' %}"
+         class="inline-block mt-6 bg-custom-darkgreen text-white px-6 py-3 rounded-full hover:bg-green-700 shadow transition">
+        🔍 เริ่มค้นหาร้านอาหารเลย
+      </a>
+    </div>
   {% endfor %}
 </div>
 {% endblock %}
