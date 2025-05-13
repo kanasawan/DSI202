@@ -2,37 +2,41 @@
 {% block title %}ยืนยันคำสั่งซื้อ - IMSUK{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto bg-white bg-opacity-80 backdrop-blur-lg p-10 rounded-3xl shadow-2xl mt-10">
-  <h1 class="text-3xl font-bold text-custom-darkgreen mb-6">✅ ยืนยันคำสั่งซื้อ</h1>
-  <p class="text-lg mb-6 text-gray-700">กรุณาตรวจสอบรายละเอียดก่อนยืนยัน</p>
+<div class="max-w-4xl mx-auto bg-custom-lightpink/80 backdrop-blur-lg p-10 rounded-3xl shadow-2xl mt-10 ring-1 ring-custom-pink">
+  <h1 class="text-4xl font-extrabold text-custom-darkgreen mb-6 text-center">✅ ยืนยันคำสั่งซื้อ</h1>
+  <p class="text-lg text-gray-700 text-center mb-8">กรุณาตรวจสอบรายละเอียดรายการอาหารก่อนดำเนินการชำระเงิน</p>
 
-  <table class="w-full bg-custom-gray rounded-xl shadow-inner mb-6">
-    <thead>
-      <tr class="bg-custom-green text-white text-left">
-        <th class="p-4">เมนู</th>
-        <th class="p-4">จำนวน</th>
-        <th class="p-4">รวม</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in cart.items.all %}
-      <tr class="border-t hover:bg-custom-lightpink transition">
-        <td class="p-4 text-lg">{{ item.menu_item.name }}</td>
-        <td class="p-4 text-lg">{{ item.quantity }}</td>
-        <td class="p-4 text-lg">฿{{ item.subtotal }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="overflow-x-auto">
+    <table class="w-full rounded-xl overflow-hidden shadow-inner text-gray-800">
+      <thead>
+        <tr class="bg-custom-darkgreen text-white text-left text-lg">
+          <th class="py-4 px-4">เมนู</th>
+          <th class="py-4 px-4 text-center">จำนวน</th>
+          <th class="py-4 px-4 text-right">รวม</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white">
+        {% for item in cart.items.all %}
+        <tr class="border-b hover:bg-custom-lightpink transition duration-150">
+          <td class="py-4 px-4">{{ item.menu_item.name }}</td>
+          <td class="py-4 px-4 text-center">{{ item.quantity }}</td>
+          <td class="py-4 px-4 text-right font-medium">฿{{ item.subtotal }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-  <p class="text-right text-2xl font-bold text-custom-darkgreen mb-6">
-    ยอดรวมทั้งหมด: ฿{{ total }}
-  </p>
+  <div class="text-right mt-8 mb-4">
+    <p class="text-2xl font-bold text-custom-darkgreen">
+      💰 ยอดรวมทั้งหมด: ฿{{ total }}
+    </p>
+  </div>
 
-  <div class="flex justify-end">
+  <div class="flex justify-center mt-6">
     <a href="{% url 'payment_select' %}"
-       class="bg-custom-darkgreen text-white px-6 py-3 rounded-xl hover:bg-green-700 shadow-md transition font-semibold text-lg">
-      ไปชำระเงิน
+       class="inline-block bg-custom-pink hover:bg-pink-500 text-white px-8 py-3 rounded-xl shadow-lg font-semibold text-xl transition">
+      💳 ไปชำระเงิน
     </a>
   </div>
 </div>

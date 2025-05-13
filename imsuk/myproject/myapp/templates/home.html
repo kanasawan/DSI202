@@ -24,7 +24,7 @@
   <!-- รายการเมนู -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for item in menu_items %}
-      <div class="bg-custom-lightpink rounded-2xl shadow-md p-4 hover:shadow-xl transition duration-300 relative">
+      <div class="bg-custom-lightpink rounded-2xl shadow-md p-4 hover:shadow-xl transition duration-300">
         {% if item.image %}
           <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-cover rounded-xl mb-3">
         {% else %}
@@ -32,12 +32,6 @@
             ไม่มีรูปภาพ
           </div>
         {% endif %}
-
-        <!-- ❤️ หัวใจร้านโปรด -->
-        <a href="{% url 'add_favorite' item.restaurant.id %}"
-           class="absolute top-3 right-3 bg-white rounded-full p-2 shadow hover:scale-110 transition">
-          <span class="text-red-500 text-xl">❤️</span>
-        </a>
 
         <h2 class="text-xl font-bold text-custom-darkgreen mb-1">{{ item.name }}</h2>
         <p class="text-sm italic text-gray-600 mb-2">จากร้าน <span class="text-custom-brown font-medium">{{ item.restaurant.name }}</span></p>
@@ -49,17 +43,23 @@
           {{ item.restaurant.open_time|time:'H:i' }} - {{ item.restaurant.close_time|time:'H:i' }}
         </p>
 
-        <!-- ปุ่มดูรายละเอียด -->
-        <a href="{% url 'menu_detail' item.id %}"
-           class="inline-block text-white bg-custom-pink px-4 py-2 rounded-xl font-medium shadow hover:bg-pink-500 transition mb-4">
-          📋 ดูรายละเอียด
-        </a>
+        <!-- ปุ่มดูรายละเอียด + หัวใจ -->
+        <div class="flex items-center justify-between mt-4">
+          <a href="{% url 'menu_detail' item.id %}"
+             class="inline-block text-white bg-custom-pink px-4 py-2 rounded-xl font-medium shadow hover:bg-pink-500 transition">
+            📋 ดูรายละเอียด
+          </a>
+          <a href="{% url 'add_favorite' item.restaurant.id %}"
+             class="inline-flex items-center justify-center bg-white text-red-400 hover:text-red-600 rounded-full w-10 h-10 shadow transition"
+             title="เพิ่มในร้านโปรด">
+            ♡
+          </a>
+        </div>
 
         {% if user.is_authenticated %}
-        <form method="post" action="{% url 'add_to_cart' item.id %}" class="quantity-form mt-2">
+        <form method="post" action="{% url 'add_to_cart' item.id %}" class="quantity-form mt-4">
           {% csrf_token %}
           <div class="flex items-center justify-between space-x-4">
-            <!-- ปุ่มเพิ่ม/ลด -->
             <div class="flex items-center space-x-3 border border-gray-300 rounded-full px-4 py-2 shadow bg-white">
               <button type="button"
                       onclick="changeQty({{ item.id }}, -1);"
@@ -74,7 +74,6 @@
                       class="bg-green-500 text-white w-8 h-8 rounded-full flex justify-center items-center text-lg font-bold">+</button>
             </div>
 
-            <!-- ปุ่มยืนยัน -->
             <button type="submit"
                     class="bg-custom-darkgreen text-white px-4 py-2 rounded-xl shadow font-semibold disabled:opacity-50 transition"
                     id="confirm-btn-{{ item.id }}" disabled>
