@@ -62,7 +62,7 @@
           <div class="flex items-center justify-between space-x-4">
             <div class="flex items-center space-x-3 border border-gray-300 rounded-full px-4 py-2 shadow bg-white">
               <button type="button"
-                      onclick="changeQty({{ item.id }}, -1);"
+                      onclick="changeQty('{{ item.id }}', -1);"
                       class="bg-red-400 text-white w-8 h-8 rounded-full flex justify-center items-center text-lg font-bold"
                       id="btn-decrease-{{ item.id }}">−</button>
 
@@ -70,7 +70,7 @@
               <input type="hidden" name="quantity" id="input-qty-{{ item.id }}" value="0">
 
               <button type="button"
-                      onclick="changeQty({{ item.id }}, 1);"
+                      onclick="changeQty('{{ item.id }}', 1);"
                       class="bg-green-500 text-white w-8 h-8 rounded-full flex justify-center items-center text-lg font-bold">+</button>
             </div>
 
