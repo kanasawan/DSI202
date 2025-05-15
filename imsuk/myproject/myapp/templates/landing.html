@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome - IMSUK</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Custom Color Classes */
+    .bg-custom-cream { background-color: #f7efdb; }
+    .bg-custom-pink { background-color: #efaca5; }
+    .bg-custom-lightpink { background-color: #f4d9d0; }
+    .bg-custom-green { background-color: #bade80; }
+    .text-custom-darkgreen { color: #3f8240; }
+    .text-custom-brown { color: #a6746a; }
+    .hover\:text-custom-darkgreen:hover { color: #3f8240; }
+    .border-custom-green { border-color: #bade80; }
+    .bg-custom-darkgreen { background-color: #3f8240; }
+    .hover\:bg-custom-darkgreen-hover:hover { background-color: #2d5e2f; }
+    .bg-custom-gray { background-color: #f5f5f5; }
+    .bg-custom-darkpink { background-color: #d68f89; }
+    .hover\:bg-custom-darkpink-hover:hover { background-color: #c07e78; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #f7efdb, #fffcf5);
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Ccircle fill="rgba(0,0,0,0.02)" cx="100" cy="100" r="100"/%3E%3C/svg%3E');
+      opacity: 0.05;
+      z-index: -1;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Poppins', sans-serif;
+      letter-spacing: 0.02em;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, rgba(247, 239, 219, 0.9), rgba(255, 255, 255, 0.95));
+      backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hero-image {
+      border-radius: 1.5rem;
+      transition: transform 0.4s ease;
+    }
+
+    .hero-image:hover {
+      transform: scale(1.03) rotate(1deg);
+    }
+
+    /* Feature Cards */
+    .feature-card {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation-delay: calc(0.15s * var(--delay));
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px) rotate(0.5deg);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Button Styling */
+    .cta-button {
+      background: #d68f89;
+      padding: 0.75rem 2.5rem;
+      border-radius: 9999px;
+      font-weight: 500;
+      color: white;
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+      box-shadow: 0 4px 15px rgba(214, 143, 137, 0.4);
+    }
+
+    .cta-button:hover {
+      background: #c07e78;
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(192, 126, 120, 0.5);
+    }
+
+    .cta-button:focus {
+      outline: none;
+      ring: 2px solid #bade80;
+    }
+
+    /* Section Divider */
+    .section-divider {
+      width: 100%;
+      height: 40px;
+      background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"%3E%3Cpath d="M1200 120L0 16.48V0h1200v120z" fill="%23f5f5f5"/%3E%3C/svg%3E') no-repeat center;
+      background-size: cover;
+      margin-top: -1px;
+    }
+
+    /* Footer */
+    footer {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(to right, #3f8240, #bade80);
+      padding: 2rem;
+      border-radius: 1.5rem 1.5rem 0 0;
+      box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.1);
+      border-top: 2px solid #bade80;
+    }
+
+    .social-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .social-icon:hover {
+      transform: scale(1.2);
+    }
+
+    /* SVG Icons */
+    .feature-icon svg {
+      fill: #3f8240;
+      width: 24px;
+      height: 24px;
+    }
+  </style>
+</head>
+<body class="text-gray-800 font-sans">
+
+  <!-- Hero Section -->
+  <main class="flex flex-col-reverse md:flex-row items-center justify-between gap-12 px-8 py-20 max-w-7xl mx-auto bg-custom-cream rounded-2xl">
+    <div class="md:w-1/2 text-center md:text-left">
+      <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-16 w-auto mx-auto md:mx-0 mb-6">
+      <div class="hero-section">
+        <h1 class="text-5xl font-bold text-custom-brown mb-3 tracking-tight">IMSUK</h1>
+        <h2 class="text-2xl italic text-custom-darkgreen mb-4">อาหาร</h2>
+        <p class="text-gray-700 text-lg leading-relaxed">
+          เพลิดเพลินกับอาหารของคุณด้วยเมนูอาหารเพื่อสุขภาพแสนอร่อยที่คัดสรรโดยเชฟท้องถิ่นโดยคำนึงถึงความยั่งยืน
+        </p>
+        <p class="text-sm text-gray-500 mt-3">รองรับร้านค้าในชุมชน ผู้แพ้อาหาร และแนวคิดลดขยะอาหาร</p>
+      </div>
+      <a href="{% url 'login' %}" class="cta-button inline-block mt-8" aria-label="เข้าสู่ระบบ">เข้าสู่ระบบ</a>
+    </div>
+    <div class="md:w-1/2">
+      <img src="{% static 'images/healthy_banner.jpg' %}" alt="Healthy Food" class="hero-image w-full shadow-2xl object-cover">
+    </div>
+  </main>
+
+  <!-- Feature Cards -->
+  <section class="max-w-6xl mx-auto mt-16 px-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="feature-card" style="--delay: 1">
+        <span class="feature-icon block mb-2">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2L4 8v8l8 6 8-6V8l-8-6zm0 2.83l6 4.5V15l-6 4.5-6-4.5V9.33l6-4.5z"/>
+            <path d="M12 7v5l3 3"/>
+            <path d="M10 14h4v2h-4z"/>
+          </svg>
+        </span>
+        <h2 class="text-lg font-bold text-custom-darkgreen mb-2">รวดเร็วทันใจ</h2>
+        <p class="text-sm text-gray-700">ส่งไวภายใน 30 นาที จากร้านที่คุณไว้ใจ</p>
+      </div>
+      <div class="feature-card" style="--delay: 2">
+        <span class="feature-icon block mb-2">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 2h12a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm0 2v16h12V4H6zm2 2h8v2H8V6zm0 4h8v2H8v-2zm0 4h8v2H8v-2z"/>
+            <path d="M10 14h4v2h-4z"/>
+          </svg>
+        </span>
+        <h2 class="text-lg font-bold text-custom-darkgreen mb-2">ใช้งานง่าย</h2>
+        <p class="text-sm text-gray-700">ระบบสั่งอาหารเรียบง่าย สะดวกทุกขั้นตอน แม้สำหรับผู้สูงวัย</p>
+      </div>
+      <div class="feature-card" style="--delay: 3">
+        <span class="feature-icon block mb-2">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6h16v12H4z"/>
+            <path d="M8 6v12m8-12v12m-6-6h4"/>
+            <path d="M10 14h4v2h-4z"/>
+          </svg>
+        </span>
+        <h2 class="text-lg font-bold text-custom-darkgreen mb-2">หลากหลาย</h2>
+        <p class="text-sm text-gray-700">ของคราว ของหวาน ครบในแอปเดียว รองรับผู้แพ้อาหาร</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Divider -->
+  <div class="section-divider"></div>
+
+  <!-- About Us Section -->
+  <section class="bg-custom-gray py-16 px-8 text-center shadow-inner rounded-2xl max-w-7xl mx-auto">
+    <h2 class="text-3xl font-bold text-custom-darkgreen mb-6 tracking-tight">PURPOSE</h2>
+    <p class="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed">
+      <strong>IMSUK</strong> เป็นแพลตฟอร์มสั่งอาหารออนไลน์ที่มุ่งเน้นการลดขยะอาหาร สนับสนุนร้านค้าชุมชน และช่วยให้ทุกคนเข้าถึงมื้ออาหารที่ปลอดภัยต่อสุขภาพและสิ่งแวดล้อมอย่างเท่าเทียม เรานำอาหารที่ยังดีแต่ขายไม่หมดในแต่ละวันมาแปรรูปใหม่ และขายในราคาประหยัดเพื่อไม่ให้สูญเปล่า พร้อมทั้งรองรับผู้แพ้อาหารและผู้มีรายได้น้อยผ่านฟีเจอร์เฉพาะทาง
+    </p>
+  </section>
+
+  <!-- Footer -->
+  <footer class="flex items-center justify-center text-sm text-white font-semibold">
+    <div class="flex items-center gap-6">
+      <span>📧 ติดต่อเรา: <a href="mailto:support@imsuk.example" class="underline hover:text-custom-darkgreen">support@imsuk.example</a></span>
+    </div>
+  </footer>
+
+</body>
+</html>

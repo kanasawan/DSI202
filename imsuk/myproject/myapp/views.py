@@ -4,17 +4,22 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from datetime import timedelta
 from django.conf import settings
+from datetime import timedelta
+from django.core.files.storage import FileSystemStorage
+import os
 
 from .models import (
     Restaurant, MenuItem, Cart, CartItem, Order,
-    Favorite, Notification, DeliveryAddress
+    Favorite, Notification, DeliveryAddress, Payment
 )
 from .forms import SignUpForm, DeliveryAddressForm
 
 
-# 1. Home Page – แสดงเมนูทั้งหมด
+# 1. Home Page
+from django.shortcuts import render
+from .models import MenuItem, Cart
+
 def home(request):
     query = request.GET.get('q', '')
     if query:
@@ -22,23 +27,30 @@ def home(request):
     else:
         menu_items = MenuItem.objects.filter(is_available=True)
 
+    # ✅ คำนวณเปอร์เซ็นต์ส่วนลดให้แต่ละเมนู
+    for item in menu_items:
+        if item.original_price > item.sale_price and item.original_price > 0:
+            discount = ((item.original_price - item.sale_price) / item.original_price) * 100
+            item.discount_percent = round(discount)
+        else:
+            item.discount_percent = 0
+
     cart_items = {}
     if request.user.is_authenticated:
         cart = Cart.objects.filter(user=request.user).first()
         if cart:
-            cart_items = {
-                str(item.menu_item.id): item.quantity
-                for item in cart.items.all()
-            }
+            cart_items = {str(item.menu_item.id): item.quantity for item in cart.items.all()}
 
     return render(request, 'home.html', {
         'menu_items': menu_items,
-        'cart_items': cart_items  # ✅ ต้องเป็น dict!
+        'cart_items': cart_items
     })
 
 
 
-# 1.1 ดูรายละเอียดเมนู
+
+
+# 1.1 เมนูรายละเอียด
 def menu_detail(request, item_id):
     menu_item = get_object_or_404(MenuItem, id=item_id)
     restaurant = menu_item.restaurant
@@ -50,6 +62,7 @@ def menu_detail(request, item_id):
 
 # 2. เพิ่มเมนูลงตะกร้า
 @login_required
+@require_POST
 def add_to_cart(request, item_id):
     item = get_object_or_404(MenuItem, id=item_id)
     quantity = int(request.POST.get('quantity', 1))
@@ -60,34 +73,33 @@ def add_to_cart(request, item_id):
         cart_item.quantity = quantity
         cart_item.save()
 
-    return redirect('cart_view')  # ✅ ไปหน้าตะกร้า
+    return redirect('cart_view')
 
 
 # 2.1 ดูตะกร้า
 @login_required
 def cart_view(request):
-    cart = Cart.objects.filter(user=request.user).first()
-    total = sum(item.subtotal() for item in cart.items.all()) if cart else 0
-    return render(request, 'cart.html', {'cart': cart, 'cart_total': total})
+    cart = get_object_or_404(Cart, user=request.user)
+    cart_total = sum(item.menu_item.sale_price * item.quantity for item in cart.items.all())
+    return render(request, 'cart.html', {
+        'cart': cart,
+        'cart_total': cart_total
+    })
 
 
-# 2.2 ลบรายการในตะกร้า
+# 2.2 ลบสินค้าในตะกร้า
 @login_required
+@require_POST
 def remove_from_cart(request, item_id):
     item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     item.delete()
     return redirect('cart_view')
 
 
-# 3. กรอกที่อยู่ครั้งแรก
+# 3. กรอกหรือแก้ไขที่อยู่
 @login_required
 def address_form(request):
-    try:
-        instance = request.user.delivery_address
-        return redirect('home')
-    except DeliveryAddress.DoesNotExist:
-        instance = None
-
+    instance = DeliveryAddress.objects.filter(user=request.user).first()
     if request.method == 'POST':
         form = DeliveryAddressForm(request.POST, instance=instance)
         if form.is_valid():
@@ -101,27 +113,6 @@ def address_form(request):
     return render(request, 'address_form.html', {'form': form})
 
 
-# 3.1 แก้ไขที่อยู่
-@login_required
-def address_update(request):
-    instance = DeliveryAddress.objects.filter(user=request.user).first()
-    if not instance:
-        return redirect('address_form')
-
-    if request.method == 'POST':
-        form = DeliveryAddressForm(request.POST, instance=instance)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-    else:
-        form = DeliveryAddressForm(instance=instance)
-
-    return render(request, 'address_form.html', {
-        'form': form,
-        'editing': True,
-    })
-
-
 # 4. หน้ายืนยันคำสั่งซื้อ
 @login_required
 def order_confirm(request):
@@ -129,18 +120,17 @@ def order_confirm(request):
     total = sum(item.subtotal() for item in cart.items.all())
     return render(request, 'order_confirm.html', {'cart': cart, 'total': total})
 
-from django.core.files.storage import FileSystemStorage
-from .models import Payment
-import os
 
+# 5. หน้าเลือกวิธีชำระเงิน พร้อม QR
 @login_required
 def payment_select(request):
     cart = Cart.objects.get(user=request.user)
     total = sum(item.subtotal() for item in cart.items.all())
+    promptpay_number = '0949645354'  # ✅ ระบุเบอร์พร้อมเพย์ของร้าน
 
     if request.method == 'POST':
         method = request.POST.get('method')
-        slip = request.FILES.get('slip')  # สำหรับ QR
+        slip = request.FILES.get('slip')
 
         try:
             address = DeliveryAddress.objects.get(user=request.user)
@@ -148,7 +138,6 @@ def payment_select(request):
             return redirect('address_form')
 
         if method == 'qr' and not slip:
-            # ถ้าเลือก QR แต่ไม่อัปโหลดสลิป
             messages.error(request, "กรุณาอัปโหลดสลิปการโอนเงินก่อนยืนยันคำสั่งซื้อ")
             return redirect('payment_select')
 
@@ -162,21 +151,19 @@ def payment_select(request):
             estimated_delivery_time=timedelta(minutes=45)
         )
 
-        # สร้างข้อมูลการชำระเงิน
         payment = Payment.objects.create(
             order=order,
             method=method,
-            status='paid' if method != 'qr' else 'pending',
+            status='paid' if method != 'qr' else 'pending'
         )
 
-        # เก็บไฟล์สลิป (ถ้ามี)
         if slip:
             fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'slips'))
             filename = fs.save(slip.name, slip)
             payment.slip_image = f'slips/{filename}'
             payment.save()
 
-        cart.items.all().delete()  # ล้างตะกร้า
+        cart.items.all().delete()
 
         Notification.objects.create(
             user=request.user,
@@ -186,35 +173,30 @@ def payment_select(request):
         return redirect('order_detail', order_id=order.id)
 
     return render(request, 'payment_select.html', {
-        'total': total
+        'total': total,
+        'promptpay_number': promptpay_number
     })
 
 
-
-# 5. รายละเอียดคำสั่งซื้อ
+# 6. รายละเอียดคำสั่งซื้อ
 @login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, 'order_detail.html', {'order': order})
 
 
-# 6. ประวัติการสั่งซื้อ
+# 7. ประวัติการสั่งซื้อ
 @login_required
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'order_history.html', {'orders': orders})
 
 
-# 7. รายการโปรด
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .models import Favorite
-
+# 8. รายการโปรด
 @login_required
 def favorite_list(request):
     favorites = Favorite.objects.filter(user=request.user)
     return render(request, 'favorite_list.html', {'favorites': favorites})
-
 
 
 @require_POST
@@ -231,7 +213,7 @@ def add_favorite(request, restaurant_id):
     return redirect('favorite_list')
 
 
-# 8. โปรไฟล์
+# 9. โปรไฟล์ผู้ใช้
 @login_required
 def profile_view(request):
     user = request.user
@@ -269,7 +251,8 @@ def profile_view(request):
     })
 
 
-# 9. สมัครสมาชิก
+# 10. สมัครสมาชิก
+
 def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -282,7 +265,7 @@ def signup_view(request):
     return render(request, 'signup.html', {'form': form})
 
 
-# 10. ตรวจสอบว่าผู้ใช้มีที่อยู่หรือยัง
+# 11. ตรวจสอบที่อยู่ก่อนใช้งาน
 @login_required
 def check_address_then_redirect(request):
     try:
@@ -292,15 +275,13 @@ def check_address_then_redirect(request):
         return redirect('address_form')
 
 
-# 11. ศูนย์ช่วยเหลือ
+# 12. ศูนย์ช่วยเหลือ
+
 def help_center(request):
     return render(request, 'help_center.html')
 
-from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, get_object_or_404
-from .models import Cart, CartItem, MenuItem
 
+# 13. ปรับจำนวนในตะกร้า
 @login_required
 @require_POST
 def update_cart_quantity(request, item_id):
@@ -319,4 +300,30 @@ def update_cart_quantity(request, item_id):
         else:
             cart_item.delete()
 
-    return redirect('cart_view')  # หรือใช้ redirect('home') หากเรียกจากหน้า home
+    return redirect('cart_view')
+
+@login_required
+def address_update(request):
+    instance = DeliveryAddress.objects.filter(user=request.user).first()
+    if not instance:
+        return redirect('address_form')
+
+    if request.method == 'POST':
+        form = DeliveryAddressForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "แก้ไขที่อยู่สำเร็จ")
+            return redirect('profile')
+    else:
+        form = DeliveryAddressForm(instance=instance)
+
+    return render(request, 'address_form.html', {
+        'form': form,
+        'editing': True,  # เพื่อให้ template แสดงว่าเป็นการแก้ไข
+    })
+
+from django.shortcuts import render
+
+def landing_page(request):
+    return render(request, 'landing.html')
+

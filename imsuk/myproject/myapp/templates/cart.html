@@ -43,10 +43,12 @@
       💰 รวมทั้งหมด: ฿{{ cart_total }}
     </div>
 
-    <div class="flex justify-end mt-6">
-      <a href="{% url 'order_confirm' %}"
-         class="bg-custom-pink hover:bg-pink-500 text-white px-8 py-3 rounded-full shadow-lg font-semibold text-xl transition duration-300 inline-flex items-center gap-2">
-        ➡️ ดำเนินการต่อ
+    <div class="flex justify-end mt-6 gap-4">
+      <a href="{% url 'home' %}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-full shadow text-lg transition duration-300">
+        🔙 เลือกเมนูเพิ่ม
+      </a>
+      <a href="{% url 'payment_select' %}" class="bg-custom-pink hover:bg-pink-500 text-white px-8 py-3 rounded-full shadow-lg font-semibold text-xl transition duration-300 inline-flex items-center gap-2">
+        ✅ ดำเนินการต่อ
       </a>
     </div>
 

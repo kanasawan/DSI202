@@ -36,7 +36,17 @@
         <h2 class="text-xl font-bold text-custom-darkgreen mb-1">{{ item.name }}</h2>
         <p class="text-sm italic text-gray-600 mb-2">จากร้าน <span class="text-custom-brown font-medium">{{ item.restaurant.name }}</span></p>
 
-        <p class="text-custom-darkgreen font-semibold text-lg mb-2">฿{{ item.sale_price }}</p>
+        {% if item.discount_percent > 0 %}
+          <div class="flex items-center space-x-2 mb-2">
+            <span class="bg-custom-pink text-white text-sm font-semibold px-3 py-1 rounded-full shadow-sm">
+              ลด {{ item.discount_percent }}%
+            </span>
+            <span class="text-custom-darkgreen text-xl font-extrabold">฿{{ item.sale_price|floatformat:2 }}</span>
+            <span class="line-through text-gray-400 text-base">฿{{ item.original_price|floatformat:2 }}</span>
+          </div>
+        {% else %}
+          <p class="text-custom-darkgreen font-bold text-lg mb-2">฿{{ item.sale_price }}</p>
+        {% endif %}
 
         <p class="text-sm text-gray-600 flex items-center mb-2">
           <span class="text-xl mr-1">⏰</span>

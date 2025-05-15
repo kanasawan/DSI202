@@ -14,6 +14,7 @@
     </ul>
   {% endif %}
 
+
   <form method="post" enctype="multipart/form-data" id="payment-form">
     {% csrf_token %}
 
@@ -36,7 +37,14 @@
     <div id="qr-section" class="hidden mt-8 space-y-5 bg-custom-lightpink/80 p-6 rounded-xl">
       <div class="text-center">
         <p class="text-lg font-semibold text-custom-darkgreen mb-2">📷 สแกนเพื่อชำระเงิน</p>
-        <img src="{% static 'images/qr_sample.jpg' %}" alt="QR Code" class="mx-auto w-40 h-40 border-4 border-white rounded-lg shadow-lg">
+
+        <!-- ✅ แสดงภาพ QR Code จาก promptpay.io -->
+        <img src="https://promptpay.io/{{ promptpay_number }}/{{ total }}"
+             alt="QR Code"
+             referrerpolicy="no-referrer"
+             class="mx-auto rounded-xl shadow-lg"
+             style="max-width: 100%; height: auto; display: block;">
+
         <p class="text-base text-gray-700 mt-2">จำนวนเงิน: <span class="text-custom-darkgreen font-bold">{{ total }} ฿</span></p>
       </div>
 
