@@ -1,10 +1,49 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}สมัครสมาชิก - IMSUK{% endblock %}
+
 {% block content %}
-<h2 class="text-xl font-bold mb-4">สมัครสมาชิก</h2>
-<form method="post" class="bg-white p-6 rounded shadow max-w-md">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">สมัครสมาชิก</button>
-</form>
+<div class="min-h-screen bg-custom-cream flex items-center justify-center px-4 py-12">
+  <div class="w-full max-w-md space-y-6 bg-white/70 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-green-200">
+    
+    <!-- โลโก้และชื่อแบรนด์ -->
+    <div class="text-center">
+      <div class="inline-block p-3 bg-white rounded-full shadow mb-2">
+        <img src="{% static 'images/imsuk.png' %}" alt="IMSUK Logo" class="h-16 w-16 mx-auto">
+      </div>
+      <h1 class="text-2xl font-extrabold text-custom-darkgreen tracking-wider">สมัครสมาชิก</h1>
+      <p class="text-sm text-gray-600 italic">สร้างบัญชีใหม่กับอิ่มสุข</p>
+    </div>
+
+    <!-- แบบฟอร์ม -->
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-custom-darkgreen">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="text-xs text-gray-500 mt-1">{{ field.help_text }}</p>
+          {% endif %}
+          {% for error in field.errors %}
+            <p class="text-sm text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <button type="submit"
+              class="w-full py-3 rounded-lg bg-custom-darkgreen text-white font-semibold hover:bg-custom-darkgreen-hover shadow-md transition">
+        สมัครสมาชิก
+      </button>
+    </form>
+
+    <!-- ลิงก์กลับไปหน้าเข้าสู่ระบบ -->
+    <p class="text-center text-sm text-gray-600 mt-4">
+      มีบัญชีอยู่แล้ว? <a href="{% url 'login' %}" class="text-custom-green font-semibold hover:text-custom-darkgreen">เข้าสู่ระบบ</a>
+    </p>
+  </div>
+</div>
 {% endblock %}

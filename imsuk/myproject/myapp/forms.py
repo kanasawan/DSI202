@@ -1,26 +1,26 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from .models import DeliveryAddress
 
-class SignUpForm(UserCreationForm):
-    email = forms.EmailField(required=True, label="อีเมล")
-
+class CustomSignupForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ['username', 'email', 'password1', 'password2']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in ['password1', 'password2']:
+            self.fields[field].help_text = None
 
 class DeliveryAddressForm(forms.ModelForm):
     class Meta:
         model = DeliveryAddress
         fields = ['address', 'phone']
-        labels = {
-            'address': 'ที่อยู่จัดส่ง',
-            'phone': 'เบอร์โทรศัพท์'
-        }
         widgets = {
-            'address': forms.Textarea(attrs={'rows': 3, 'class': 'w-full p-2 border rounded'}),
-            'phone': forms.TextInput(attrs={'class': 'w-full p-2 border rounded'})
+            'address': forms.Textarea(attrs={'rows': 2, 'placeholder': 'ระบุที่อยู่โดยละเอียด'}),
+            'phone': forms.TextInput(attrs={'placeholder': 'เช่น 08x-xxx-xxxx'}),
         }
 
-
+# ✅ เพิ่ม alias ตรงนี้
+SignUpForm = CustomSignupForm

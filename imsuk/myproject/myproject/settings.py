@@ -1,13 +1,15 @@
 from pathlib import Path
 import os
+from decouple import config  # ✅ เพิ่ม
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-+)*o632k8arvw892w#je25(yn6^)nplk^a%pw^&ttptl9!08do'
+SECRET_KEY = config('SECRET_KEY', default='your-default-secret-key')  # ✅ ใช้จาก .env
 
-DEBUG = True
-ALLOWED_HOSTS = ['*']  # เพื่อให้เปิดได้จาก container ภายนอก
+DEBUG = config('DEBUG', default=True, cast=bool)
+
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -16,7 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', 
 
     'myapp',
     'django_extensions',
@@ -45,12 +47,12 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',  # ✅ จำเป็นสำหรับ social auth
+                'django.template.context_processors.request',  # ✅ จำเป็น
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'myapp.context_processors.cart_item_count',
-                'social_django.context_processors.backends',         # ✅
-                'social_django.context_processors.login_redirect',   # ✅
+                'social_django.context_processors.backends',       # ✅
+                'social_django.context_processors.login_redirect', # ✅
             ],
         },
     },
@@ -58,7 +60,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -66,7 +67,6 @@ DATABASES = {
     }
 }
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -89,15 +89,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/'
 
-# ✅ Authentication backends
+# ✅ Social Auth Backends
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',  # ✅ Google OAuth2
+    'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
-# ✅ Google OAuth2 Credentials (คุณต้องไปที่ https://console.cloud.google.com เพื่อขอมา)
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 'YOUR_GOOGLE_CLIENT_ID'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'YOUR_GOOGLE_CLIENT_SECRET'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/home/'  # ✅ เพิ่มบรรทัดนี้
+
+# ✅ Google OAuth2 จาก .env
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+

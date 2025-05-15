@@ -9,6 +9,8 @@ from datetime import timedelta
 from django.core.files.storage import FileSystemStorage
 import os
 
+
+
 from .models import (
     Restaurant, MenuItem, Cart, CartItem, Order,
     Favorite, Notification, DeliveryAddress, Payment
@@ -253,16 +255,20 @@ def profile_view(request):
 
 # 10. สมัครสมาชิก
 
+from django.shortcuts import render, redirect
+from .forms import CustomSignupForm  # ✅ import form ที่สร้างไว้
+
 def signup_view(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = CustomSignupForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('address_form')
+            form.save()
+            return redirect('login')  # หรือเปลี่ยนเป็น path ที่ต้องการ
     else:
-        form = SignUpForm()
+        form = CustomSignupForm()
     return render(request, 'signup.html', {'form': form})
+
+
 
 
 # 11. ตรวจสอบที่อยู่ก่อนใช้งาน
