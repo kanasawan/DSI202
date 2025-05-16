@@ -162,3 +162,4 @@ class PaymentMethod(models.Model):
     def __str__(self):
         return f"{self.method_name} - {self.card_info}"
 
+
