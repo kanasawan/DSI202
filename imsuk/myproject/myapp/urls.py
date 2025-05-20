@@ -14,7 +14,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
 
     # Google OAuth
-    path('auth/', include('social_django.urls', namespace='social')),  # ✅ เพิ่มตรงนี้
+    path('auth/', include('social_django.urls', namespace='social')),  
 
     # User Views
     path('home/', views.home, name='home'),
